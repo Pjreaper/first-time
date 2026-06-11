@@ -7,8 +7,7 @@ st.title("🧪 아우내농협 농약 검색 프로그램 (실험용 Prototype)"
 st.write("지운님이 설계하신 마스터 DB 기반의 농약 검색 실험실입니다.")
 
 # 파일 경로 설정
-user_profile = os.environ.get("USERPROFILE", "")
-excel_path = os.path.join(user_profile, "Desktop", "실험", "실험용.xlsx")
+excel_path = "실험용.xlsx"
 
 @st.cache_data
 def load_data(path):
