@@ -40,7 +40,7 @@ if search_keyword:
 
         # 검색된 약들을 하나씩 예쁘게 화면에 출력
         for index, row in result_df.iterrows():
-            st.subheader(f"🏷️ {row['약명']} ({row['유통사 (제조사)']})")
+            st.subheader(f"🏷️ {row['약명']} ({row['유통사(제조사)']})")
             
             # 화면을 세 칸(3단 컬럼)으로 나누어 정보 배치
             col1, col2, col3 = st.columns(3)
