@@ -72,7 +72,7 @@ if search_keyword:
                 st.write(f"**· 안전사용기준:** {row['안전사용기준']}")
                 st.write(f"**· 혼용 가능(살충):** {row['혼용가능한 살충제']}")
                 st.write(f"**· 혼용 가능(살균):** {row['혼용가능한 살균제']}")
-                st.markdown(f"**· 🚨 혼용 불가/주의:** <span style='color:red'>{row['혼용불가(주의) 약제']}</span>", unsafe_allow_html=True)
+                st.markdown(f"**· 🚨 혼용 불가/주의:** <span style='color:red'>{row['혼용불가(주의)약제']}</span>", unsafe_allow_html=True)
             
             # 작용원리 및 특성은 내용이 길기 때문에 클릭해서 열어보도록 아코디언(Expander)으로 처리
             with st.expander(f"💡 {row['약명']} 작용원리 및 상세 특성 보기", expanded=False):
