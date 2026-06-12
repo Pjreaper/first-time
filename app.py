@@ -1,78 +1,84 @@
 import streamlit as st
 import pandas as pd
-import os
 
-st.set_page_config(page_title="아우내농협 농약 검색 시스템 (실험용)", layout="wide")
-st.title("🧪 아우내농협 농약 검색 프로그램 (실험용 Prototype)")
-st.write("지운님이 설계하신 마스터 DB 기반의 농약 검색 실험실입니다.")
+# 1. 페이지 기본 설정 (웹 브라우저 탭 이름, 아이콘, 화면 넓게 쓰기)
+st.set_page_config(page_title="아우내 영농조합법인 농약 검색기", page_icon="🐛", layout="wide")
 
-# 파일 경로 설정
-excel_path = "실험용.xlsx"
-
+# 2. 엑셀 데이터 불러오기 (캐시를 사용해 로딩 속도 향상)
 @st.cache_data
-def load_data(path):
-    if os.path.exists(path):
-        df = pd.read_excel(path, dtype=str)
-        return df
+def load_data():
+    # 지운님의 엑셀 파일 이름과 똑같이 맞췄습니다.
+    file_name = "26아우내영농조합법인 농약 혼용가부표(충).xlsx"
+    df = pd.read_excel(file_name)
+    # 데이터가 비어있는 칸(NaN)을 빈 문자열로 깔끔하게 처리
+    df = df.fillna("")
+    return df
+
+try:
+    df = load_data()
+except Exception as e:
+    st.error(f"엑셀 파일을 찾을 수 없습니다. 파일 이름이 정확한지 확인해주세요.\n에러: {e}")
+    st.stop()
+
+# 3. 화면 상단 타이틀 및 설명
+st.title("🌱 아우내 영농조합법인 살충제 검색 시스템")
+st.markdown("**현장 처방과 혼용 가부를 한눈에!** 검색창에 약 이름(상표명)을 입력하세요.")
+st.markdown("---")
+
+# 4. 검색창 만들기
+search_keyword = st.text_input("🔍 검색할 약 이름을 입력하세요 (예: 엑시렐, 벨룸, 렘페이지)", "")
+
+# 검색어가 입력되었을 때만 결과 보여주기
+if search_keyword:
+    # '약명' 열에서 검색어가 포함된 데이터만 필터링
+    result_df = df[df['약명'].astype(str).str.contains(search_keyword, case=False, na=False)]
+
+    if result_df.empty:
+        st.warning(f"'{search_keyword}'에 대한 검색 결과가 없습니다. 이름을 다시 확인해주세요.")
     else:
-        return None
+        st.success(f"총 {len(result_df)}건의 약제가 검색되었습니다.")
 
-df = load_data(excel_path)
-
-if df is None:
-    st.error(f"📂 엑셀 파일을 찾을 수 없습니다. 경로를 확인해 주세요!\n현재 설정된 경로: {excel_path}")
-else:
-    st.success("✅ 엑셀 데이터베이스를 성공적으로 불러왔습니다!")
-    
-    # 💡 핵심 방어 코드: 엑셀 제목 열에 숨어있는 띄어쓰기/공백을 모두 자동으로 지워줍니다.
-    df.columns = df.columns.str.strip()
-    
-    # '약명' 열이 무사히 인식되었는지 확인합니다.
-    if '약명' not in df.columns:
-        st.error("🚨 엑셀의 첫 번째 줄에서 '약명' 열을 찾을 수 없습니다. 엑셀 1번 행에 제목들이 잘 적혀 있는지 확인해 주세요!")
-        st.write("현재 파이썬이 읽어들인 엑셀 제목들은 다음과 같습니다:", list(df.columns))
-    else:
-        df['약명'] = df['약명'].str.strip()
-        
-        st.subheader("🔍 농약 이름 검색")
-        search_query = st.text_input("검색할 농약 이름을 입력하세요 (예: 디져스, 캡틴 등)", "")
-
-        if search_query:
-            filtered_df = df[df['약명'].str.contains(search_query, case=False, na=False)]
+        # 검색된 약들을 하나씩 예쁘게 화면에 출력
+        for index, row in result_df.iterrows():
+            st.subheader(f"🏷️ {row['약명']} ({row['유통사 (제조사)']})")
             
-            if not filtered_df.empty:
-                st.write(f"📊 총 **{len(filtered_df)}**개의 약제가 검색되었습니다.")
-                
-                for idx, row in filtered_df.iterrows():
-                    with st.container():
-                        st.markdown(f"### 💊 {row.get('약명', '-')} *(품목번호: {row.get('품목번호', '-')})*")
-                        
-                        col1, col2, col3 = st.columns(3)
-                        
-                        with col1:
-                            st.markdown("**[기본 정보]**")
-                            st.write(f"• **병명/해충명:** {row.get('병명', '-')}")
-                            st.write(f"• **작용기작:** {row.get('작용 기작', '-')}")
-                            st.write(f"• **제형:** {row.get('제형', '-')}")
-                            st.write(f"• **제조/유통사:** {row.get('유통사 (제조사)', '-')}")
-                            st.write(f"• **판매단가:** {row.get('판매 단가', '-')} 원")
-                            
-                        with col2:
-                            st.markdown("**[성분 및 약효 특성]**")
-                            st.write(f"• **성분 1:** {row.get('성분1 (한글)', '-')} ({row.get('성분 1계통', '-')}) - 기작: {row.get('성분1 작용기작', '-')}")
-                            st.write(f"• **중독 방식:** {row.get('중독 방식 (살충 경로)', '-')}")
-                            st.write(f"• **침투이행/침달성:** 이행성({row.get('침투이행성', '-')}) / 침달성({row.get('침달성', '-')})")
-                            
-                        with col3:
-                            st.markdown("**[사용 기준 및 혼용]**")
-                            st.write(f"• **안전사용기준:** {row.get('안전사용기준', '-')}")
-                            st.write(f"• **희석배수/사용량:** {row.get('희석배수', '-')} / {row.get('사용량', '-')}")
-                            st.write(f"• **⚠️ 혼용 불가:** {row.get('혼용불가(주의)약제', '-')}")
-                        
-                        st.markdown("---")
-            else:
-                st.warning("❌ 검색 결과가 없습니다.")
+            # 화면을 세 칸(3단 컬럼)으로 나누어 정보 배치
+            col1, col2, col3 = st.columns(3)
+            
+            with col1:
+                st.markdown("#### 📌 기본 정보")
+                st.write(f"**· 적용 대상:** {row['병명']}")
+                st.write(f"**· 작용 기작:** {row['작용 기작']}")
+                st.write(f"**· 제형:** {row['제형']}")
+                st.write(f"**· 목적/구분:** {row['목적']} / {row['구분']}")
+                st.write(f"**· 규격 및 단가:** {row['규격']}{row['단위']} / {row['판매 단가']}원")
 
-        st.subheader("📂 전체 데이터베이스 확인")
-        if st.checkbox("전체 농약 목록 표로 보기"):
-            st.dataframe(df)
+            with col2:
+                st.markdown("#### 🧪 성분 및 침투 정보")
+                # 성분 1 정보
+                st.write(f"**· 성분1:** {row['성분1 (한글)']} ({row['성분1 함량(&)']})")
+                st.write(f"  - 계통: {row['성분1 계통']} [{row['성분1 작용기작']}]")
+                # 성분 2 정보 (있는 경우에만 출력)
+                if row['성분2 (한글)'] != "":
+                    st.write(f"**· 성분2:** {row['성분2 (한글)']} ({row['성분2 함량(&)']})")
+                    st.write(f"  - 계통: {row['성분2 계통']} [{row['성분2 작용기작']}]")
+                
+                st.write(f"**· 살충 경로:** {row['중독 방식 (살충 경로)']}")
+                st.write(f"**· 침투/침달성:** {row['침투이행성']} / {row['침달성']}")
+
+            with col3:
+                st.markdown("#### 📋 사용 및 혼용 정보")
+                st.write(f"**· 사용량/희석:** {row['사용량']} (희석: {row['희석배수']})")
+                st.write(f"**· 안전사용기준:** {row['안전사용기준']}")
+                st.write(f"**· 혼용 가능(살충):** {row['혼용가능한 살충제']}")
+                st.write(f"**· 혼용 가능(살균):** {row['혼용가능한 살균제']}")
+                st.markdown(f"**· 🚨 혼용 불가/주의:** <span style='color:red'>{row['혼용불가(주의) 약제']}</span>", unsafe_allow_html=True)
+            
+            # 작용원리 및 특성은 내용이 길기 때문에 클릭해서 열어보도록 아코디언(Expander)으로 처리
+            with st.expander(f"💡 {row['약명']} 작용원리 및 상세 특성 보기", expanded=False):
+                st.markdown(f"**[작용 원리]**\n{row['작용원리']}")
+                st.markdown("---")
+                st.markdown(f"**[상세 특성]**\n{row['특성']}")
+            
+            # 다음 약제와의 구분을 위한 선
+            st.markdown("---")
