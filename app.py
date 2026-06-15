@@ -23,45 +23,59 @@ st.title("🌱 아우내 영농조합법인 살충제 검색 시스템")
 st.markdown("**현장 처방과 혼용 가부를 한눈에!** 검색 조건을 입력하세요.")
 st.markdown("---")
 
-# 4. 검색창을 두 칸으로 나누기 (약 이름 / 적용 대상)
+# 4. 엑셀에서 검색용 '전체 목록' 자동 추출하기
+# (1) 약 이름 목록 뽑기 (중복 제거 후 가나다순 정렬)
+drug_list = sorted([str(x) for x in df['약명'].unique() if str(x).strip() != ""])
+
+# (2) 해충 이름 목록 뽑기 ("진딧물, 굴파리" 처럼 섞인 것을 다 쪼개서 개별 목록으로 만듦)
+all_pests = []
+for pests in df['병명'].dropna().astype(str):
+    # 콤마(,)나 슬래시(/)로 여러 마리가 적혀있을 경우 쪼개기
+    split_pests = [p.strip() for p in pests.replace('/', ',').split(',')]
+    all_pests.extend(split_pests)
+# 중복 해충 제거 후 가나다순 정렬
+pest_list = sorted(list(set([p for p in all_pests if p])))
+
+# 5. 검색창 만들기 (selectbox 적용!)
 col_search1, col_search2 = st.columns(2)
 
 with col_search1:
-    search_keyword = st.text_input("💊 검색할 '약 이름'을 입력하세요 (예: 엑시렐)", "")
+    # 빈칸("")을 리스트 맨 앞에 넣어서 처음엔 아무것도 선택 안 된 상태로 만듦
+    search_keyword = st.selectbox(
+        "💊 검색할 '약 이름'을 선택하거나 입력하세요", 
+        options=[""] + drug_list
+    )
 
 with col_search2:
-    pest_keyword = st.text_input("🐛 방제할 '해충(적용대상)'을 입력하세요 (예: 진딧물, 굴파리)", "")
+    pest_keyword = st.selectbox(
+        "🐛 방제할 '해충(적용대상)'을 선택하거나 입력하세요", 
+        options=[""] + pest_list
+    )
 
-# 5. 검색 로직 (둘 중 하나라도 입력되면 검색 시작)
+# 6. 검색 로직 (둘 중 하나라도 선택되면 검색 시작)
 if search_keyword or pest_keyword:
     filtered_df = df.copy()
     
-    # 약 이름이 입력된 경우 필터링
+    # 약 이름 필터링
     if search_keyword:
         filtered_df = filtered_df[filtered_df['약명'].astype(str).str.contains(search_keyword, case=False, na=False)]
         
-    # 해충 이름이 입력된 경우 필터링
+    # 해충 이름 필터링
     if pest_keyword:
         filtered_df = filtered_df[filtered_df['병명'].astype(str).str.contains(pest_keyword, case=False, na=False)]
 
-    # 검색 결과 출력
     if filtered_df.empty:
         st.warning("검색 조건에 맞는 약제가 없습니다. 이름을 다시 확인해주세요.")
     else:
-        # ⭐️ 핵심 해결책: 검색된 데이터에서 약 이름의 중복을 제거하고 '고유한 약 이름' 리스트만 뽑아냄
         unique_drugs = filtered_df['약명'].unique()
         st.success(f"총 {len(unique_drugs)}가지의 약제가 검색되었습니다.")
 
         for drug_name in unique_drugs:
-            # ⭐️ 원본 엑셀(df)에서 이 약의 이름을 가진 '모든 행'을 다 끌어옴 (다른 해충 정보까지 전부 확보)
             drug_all_data = df[df['약명'] == drug_name]
-            
-            # 성분, 단가 같은 공통 정보는 첫 번째 줄(iloc[0])에서만 가져와서 한 번만 출력함
             base_info = drug_all_data.iloc[0]
 
             st.subheader(f"🏷️ {base_info['약명']} ({base_info['유통사(제조사)']})")
             
-            # 단가 콤마 처리
             price = base_info['판매단가']
             if pd.isna(price) or str(price).strip() == "":
                 price_formatted = "가격 정보 없음"
@@ -75,7 +89,6 @@ if search_keyword or pest_keyword:
             
             with col1:
                 st.markdown("#### 📌 기본 정보")
-                # 이 약이 잡을 수 있는 모든 해충을 쉼표로 예쁘게 묶어서 한 번에 보여줌
                 all_pests_list = drug_all_data['병명'].unique()
                 all_pests_str = ", ".join(all_pests_list)
                 
@@ -98,7 +111,6 @@ if search_keyword or pest_keyword:
 
             with col3:
                 st.markdown("#### 📋 해충별 사용 기준")
-                # ⭐️ 이 약이 가진 해충별로 안전사용기준을 반복해서 목록으로 띄워줌
                 for _, row in drug_all_data.iterrows():
                     st.markdown(f"**[{row['병명']}]** <span style='color: #D35400; font-weight: bold;'>{row['사용량']}</span> / {row['안전사용기준']}", unsafe_allow_html=True)
                 
@@ -107,7 +119,6 @@ if search_keyword or pest_keyword:
                 st.write(f"**· 혼용 가능(살균):** {base_info['혼용가능한 살균제']}")
                 st.markdown(f"**· 🚨 혼용 불가/주의:** <span style='color:red'>{base_info['혼용불가(주의)약제']}</span>", unsafe_allow_html=True)
             
-            # 작용원리 Expander (특성은 지우셨다고 하니 작용원리만 남겼습니다!)
             with st.expander(f"💡 {base_info['약명']} 작용원리 보기", expanded=False):
                 st.markdown(f"{base_info['작용원리']}")
             
