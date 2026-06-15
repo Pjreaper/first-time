@@ -75,9 +75,8 @@ if search_keyword or pest_keyword:
                 st.write(f"**· 작용기작:** {row['작용기작']}")
                 st.write(f"**· 제형:** {row['제형']}")
                 st.write(f"**· 목적/구분:** {row['목적']} / {row['구분']}")
-                st.write(f"**· 규격:** {row['규격']}} / **{price_formatted}**")
                 # 수정 2: 단가에 천단위 콤마 적용
-                st.write(f"**· 단가:** {row['규격']}{row['단위']} / **{price_formatted}**")
+                st.write(f"**· 규격 및 단가:** {row['규격']}{row['단위']} / **{price_formatted}**")
 
             with col2:
                 st.markdown("#### 🧪 성분 및 침투 정보")
