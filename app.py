@@ -109,7 +109,7 @@ if search_keyword or pest_keyword:
                 st.write(f"**· 작용기작:** {base_info['작용기작']}")
                 st.write(f"**· 제형:** {base_info['제형']}")
                 st.write(f"**· 목적/구분:** {base_info['목적']} / {base_info['구분']}")
-                st.write(f"**· 규격 및 단가:** {base_info['규격']}{base_info['단위']} / **{price_formatted}**")
+                st.write(f"**· 규격 및 단가:** {base_info['규격']}{base_info['단위']} / **{price_formatted}**<span style='font-size: 1.4em; font-weight: bold;'>")
 
             with col2:
                 st.markdown("#### 🧪 성분 및 침투 정보")
