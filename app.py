@@ -105,7 +105,7 @@ if search_keyword or pest_keyword:
                 all_pests_list = drug_all_data['병명'].unique()
                 all_pests_str = ", ".join(all_pests_list)
                 
-                st.markdown(f"**· 등록된 모든 해충:** <span style='font-size: 1.2em; font-weight: bold; color: #1E8449;'>{all_pests_str}</span>", unsafe_allow_html=True)
+                st.markdown(f"**· 등록된 모든 해충:** <span style='font-size: 1.4em; font-weight: bold; color: #1E8449;'>{all_pests_str}</span>", unsafe_allow_html=True)
                 st.write(f"**· 작용기작:** {base_info['작용기작']}")
                 st.write(f"**· 제형:** {base_info['제형']}")
                 st.write(f"**· 목적/구분:** {base_info['목적']} / {base_info['구분']}")
@@ -125,7 +125,7 @@ if search_keyword or pest_keyword:
             with col3:
                 st.markdown("#### 📋 해충별 사용 기준")
                 for _, row in drug_all_data.iterrows():
-                    st.markdown(f"**[{row['병명']}]** <span style='color: #D35400; font-weight: bold;'>{row['사용량']}</span> / {row['안전사용기준']}", unsafe_allow_html=True)
+                    st.markdown(f"**[{row['병명']}]** <span style=font-size: 1.4em; 'color: #D35400; font-weight: bold;'>{row['사용량']}</span> / {row['안전사용기준']}", unsafe_allow_html=True)
                 
                 st.markdown("---")
                 st.write(f"**· 혼용 가능(살충):** {base_info['혼용가능한 살충제']}")
