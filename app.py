@@ -78,7 +78,6 @@ if search_keyword:
             with st.expander(f"💡 {row['약명']} 작용원리 및 상세 특성 보기", expanded=False):
                 st.markdown(f"**[작용 원리]**\n{row['작용원리']}")
                 st.markdown("---")
-                st.markdown(f"**[상세 특성]**\n{row['특성']}")
             
             # 다음 약제와의 구분을 위한 선
             st.markdown("---")
