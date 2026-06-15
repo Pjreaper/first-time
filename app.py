@@ -36,11 +36,9 @@ pest_list = sorted(list(set([p for p in all_pests if p])))
 # ---------------------------------------------------------
 # 💡 초기화 버튼과 세션 상태(메모장) 로직 추가
 def clear_search():
-    # 초기화 버튼을 누르면 아래 두 메모장(세션)의 글자를 모두 지웁니다.
     st.session_state.drug_search = ""
     st.session_state.pest_search = ""
 
-# 화면 구성을 8:2 비율로 나누어 오른쪽에 초기화 버튼 예쁘게 배치
 col_btn1, col_btn2 = st.columns([8, 2])
 with col_btn2:
     st.button("🔄 검색 조건 초기화", on_click=clear_search, use_container_width=True)
@@ -50,7 +48,6 @@ with col_btn2:
 col_search1, col_search2 = st.columns(2)
 
 with col_search1:
-    # key='drug_search' 를 달아서 메모장과 연결합니다!
     search_keyword = st.selectbox(
         "💊 검색할 '약 이름'을 선택하거나 입력하세요", 
         options=[""] + drug_list,
@@ -58,7 +55,6 @@ with col_search1:
     )
 
 with col_search2:
-    # key='pest_search' 를 달아서 메모장과 연결합니다!
     pest_keyword = st.selectbox(
         "🐛 방제할 '해충(적용대상)'을 선택하거나 입력하세요", 
         options=[""] + pest_list,
@@ -109,7 +105,9 @@ if search_keyword or pest_keyword:
                 st.write(f"**· 작용기작:** {base_info['작용기작']}")
                 st.write(f"**· 제형:** {base_info['제형']}")
                 st.write(f"**· 목적/구분:** {base_info['목적']} / {base_info['구분']}")
-                st.write(f"**· 규격 및 단가:** {base_info['규격']}{base_info['단위']} / **{price_formatted}**<span style='font-size: 1.4em; font-weight: bold;'>")
+                
+                # 💡 수정된 부분: st.markdown을 사용하고 <span> 태그로 변수를 감쌌습니다. 색상은 눈에 띄는 진한 빨간색(#C0392B)으로 설정했습니다.
+                st.markdown(f"**· 규격 및 단가:** {base_info['규격']}{base_info['단위']} / <span style='font-size: 1.4em; font-weight: bold; color: #C0392B;'>{price_formatted}</span>", unsafe_allow_html=True)
 
             with col2:
                 st.markdown("#### 🧪 성분 및 침투 정보")
