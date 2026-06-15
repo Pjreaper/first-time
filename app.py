@@ -80,10 +80,10 @@ if search_keyword or pest_keyword:
 
             with col2:
                 st.markdown("#### 🧪 성분 및 침투 정보")
-                st.write(f"**· 성분1:** {row['성분1(한글)']} ({row['성분1함량(&)']})")
+                st.write(f"**· 성분1:** {row['성분1(한글)']} ({row['성분1함량(%)']})")
                 st.write(f"  - 계통: {row['성분1계통']} [{row['성분1작용기작']}]")
                 if row['성분2 (한글)'] != "":
-                    st.write(f"**· 성분2:** {row['성분2(한글)']} ({row['성분2함량(&)']})")
+                    st.write(f"**· 성분2:** {row['성분2(한글)']} ({row['성분2함량(%)']})")
                     st.write(f"  - 계통: {row['성분2계통']} [{row['성분2작용기작']}]")
                 
                 st.write(f"**· 살충경로:** {row['중독 방식(살충 경로)']}")
