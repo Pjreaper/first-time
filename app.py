@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 # 1. 페이지 기본 설정
-st.set_page_config(page_title="아우내 영농조합법인 농약(충) 검색기", page_icon="🐛", layout="wide")
+st.set_page_config(page_title="아우내 영농조합법인 농약 검색기", page_icon="🐛", layout="wide")
 
 # 2. 엑셀 데이터 불러오기
 @st.cache_data
@@ -24,35 +24,47 @@ st.markdown("**현장 처방과 혼용 가부를 한눈에!** 검색 조건을 �
 st.markdown("---")
 
 # 4. 엑셀에서 검색용 '전체 목록' 자동 추출하기
-# (1) 약 이름 목록 뽑기 (중복 제거 후 가나다순 정렬)
 drug_list = sorted([str(x) for x in df['약명'].unique() if str(x).strip() != ""])
 
-# (2) 해충 이름 목록 뽑기 ("진딧물, 굴파리" 처럼 섞인 것을 다 쪼개서 개별 목록으로 만듦)
 all_pests = []
 for pests in df['병명'].dropna().astype(str):
-    # 콤마(,)나 슬래시(/)로 여러 마리가 적혀있을 경우 쪼개기
     split_pests = [p.strip() for p in pests.replace('/', ',').split(',')]
     all_pests.extend(split_pests)
-# 중복 해충 제거 후 가나다순 정렬
 pest_list = sorted(list(set([p for p in all_pests if p])))
 
-# 5. 검색창 만들기 (selectbox 적용!)
+# ---------------------------------------------------------
+# 💡 초기화 버튼과 세션 상태(메모장) 로직 추가
+def clear_search():
+    # 초기화 버튼을 누르면 아래 두 메모장(세션)의 글자를 모두 지웁니다.
+    st.session_state.drug_search = ""
+    st.session_state.pest_search = ""
+
+# 화면 구성을 8:2 비율로 나누어 오른쪽에 초기화 버튼 예쁘게 배치
+col_btn1, col_btn2 = st.columns([8, 2])
+with col_btn2:
+    st.button("🔄 검색 조건 초기화", on_click=clear_search, use_container_width=True)
+# ---------------------------------------------------------
+
+# 5. 검색창 만들기
 col_search1, col_search2 = st.columns(2)
 
 with col_search1:
-    # 빈칸("")을 리스트 맨 앞에 넣어서 처음엔 아무것도 선택 안 된 상태로 만듦
+    # key='drug_search' 를 달아서 메모장과 연결합니다!
     search_keyword = st.selectbox(
         "💊 검색할 '약 이름'을 선택하거나 입력하세요", 
-        options=[""] + drug_list
+        options=[""] + drug_list,
+        key='drug_search'
     )
 
 with col_search2:
+    # key='pest_search' 를 달아서 메모장과 연결합니다!
     pest_keyword = st.selectbox(
         "🐛 방제할 '해충(적용대상)'을 선택하거나 입력하세요", 
-        options=[""] + pest_list
+        options=[""] + pest_list,
+        key='pest_search'
     )
 
-# 6. 검색 로직 (둘 중 하나라도 선택되면 검색 시작)
+# 6. 검색 로직
 if search_keyword or pest_keyword:
     filtered_df = df.copy()
     
