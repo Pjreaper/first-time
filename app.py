@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 # 1. 페이지 기본 설정
-st.set_page_config(page_title="아우내 영농조합법인 농약 검색기", page_icon="🐛", layout="wide")
+st.set_page_config(page_title="아우내 영농조합법인 농약(충) 검색기", page_icon="🐛", layout="wide")
 
 # 2. 엑셀 데이터 불러오기
 @st.cache_data
