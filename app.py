@@ -125,7 +125,7 @@ if search_keyword or pest_keyword:
             with col3:
                 st.markdown("#### 📋 해충별 사용 기준")
                 for _, row in drug_all_data.iterrows():
-                    st.markdown(f"**[{row['병명']}]** <span style=font-size: 1.4em; 'color: #D35400; font-weight: bold;'>{row['사용량']}</span> / {row['안전사용기준']}", unsafe_allow_html=True)
+                    st.markdown(f"**[{row['병명']}]** <span style='font-size: 1.4em; font-weight: bold; color: #D35400;'>{row['사용량']}</span> / {row['안전사용기준']}", unsafe_allow_html=True)
                 
                 st.markdown("---")
                 st.write(f"**· 혼용 가능(살충):** {base_info['혼용가능한 살충제']}")
