@@ -51,10 +51,10 @@ if search_keyword or pest_keyword:
         st.success(f"총 {len(result_df)}건의 약제가 검색되었습니다.")
 
         for index, row in result_df.iterrows():
-            st.subheader(f"🏷️ {row['약명']} ({row['유통사 (제조사)']})")
+            st.subheader(f"🏷️ {row['약명']} ({row['유통사(제조사)']})")
             
             # --- 단가 콤마(천단위) 처리 로직 ---
-            price = row['판매 단가']
+            price = row['판매단가']
             if pd.isna(price) or str(price).strip() == "":
                 price_formatted = "가격 정보 없음"
             else:
@@ -71,8 +71,8 @@ if search_keyword or pest_keyword:
             with col1:
                 st.markdown("#### 📌 기본 정보")
                 # 수정 1: 적용대상 글씨 키우기 (초록색, 1.3배 크기)
-                st.markdown(f"**· 적용 대상:** <span style='font-size: 1.3em; font-weight: bold; color: #1E8449;'>{row['병명']}</span>", unsafe_allow_html=True)
-                st.write(f"**· 작용 기작:** {row['작용 기작']}")
+                st.markdown(f"**· 적용대상:** <span style='font-size: 1.3em; font-weight: bold; color: #1E8449;'>{row['병명']}</span>", unsafe_allow_html=True)
+                st.write(f"**· 작용기작:** {row['작용기작']}")
                 st.write(f"**· 제형:** {row['제형']}")
                 st.write(f"**· 목적/구분:** {row['목적']} / {row['구분']}")
                 # 수정 2: 단가에 천단위 콤마 적용
@@ -80,13 +80,13 @@ if search_keyword or pest_keyword:
 
             with col2:
                 st.markdown("#### 🧪 성분 및 침투 정보")
-                st.write(f"**· 성분1:** {row['성분1 (한글)']} ({row['성분1 함량(&)']})")
-                st.write(f"  - 계통: {row['성분1 계통']} [{row['성분1 작용기작']}]")
+                st.write(f"**· 성분1:** {row['성분1(한글)']} ({row['성분1함량(&)']})")
+                st.write(f"  - 계통: {row['성분1계통']} [{row['성분1작용기작']}]")
                 if row['성분2 (한글)'] != "":
-                    st.write(f"**· 성분2:** {row['성분2 (한글)']} ({row['성분2 함량(&)']})")
-                    st.write(f"  - 계통: {row['성분2 계통']} [{row['성분2 작용기작']}]")
+                    st.write(f"**· 성분2:** {row['성분2(한글)']} ({row['성분2함량(&)']})")
+                    st.write(f"  - 계통: {row['성분2계통']} [{row['성분2작용기작']}]")
                 
-                st.write(f"**· 살충 경로:** {row['중독 방식 (살충 경로)']}")
+                st.write(f"**· 살충경로:** {row['중독 방식(살충 경로)']}")
                 st.write(f"**· 침투/침달성:** {row['침투이행성']} / {row['침달성']}")
 
             with col3:
