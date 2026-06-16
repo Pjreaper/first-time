@@ -1,10 +1,8 @@
 import streamlit as st
 import pandas as pd
 
-# 1. 페이지 기본 설정
 st.set_page_config(page_title="아우내 영농조합법인 농약 검색기", page_icon="🐛", layout="wide")
 
-# 2. 엑셀 데이터 불러오기
 @st.cache_data
 def load_data():
     file_name = "26아우내영농조합법인 농약 혼용가부표(충).xlsx"
@@ -18,13 +16,11 @@ except Exception as e:
     st.error(f"엑셀 파일을 찾을 수 없습니다...\n에러: {e}")
     st.stop()
 
-# 3. 화면 상단 타이틀
 st.title("🌱 아우내 영농조합법인 살충제 검색 시스템")
 st.markdown("**처방과 혼용 가부를 한눈에!** 검색 조건을 입력하세요.")
 st.markdown("**아직 부족한 점이 많습니다. 많은 피드백 부탁드립니다.**")
 st.markdown("---")
 
-# 4. 엑셀에서 검색용 '전체 목록' 자동 추출하기
 drug_list = sorted([str(x) for x in df['약명'].unique() if str(x).strip() != ""])
 
 all_pests = []
@@ -34,23 +30,21 @@ for pests in df['병명'].dropna().astype(str):
 pest_list = sorted(list(set([p for p in all_pests if p])))
 
 # ---------------------------------------------------------
-# 💡 초기화 버튼과 세션 상태 로직
 def clear_search():
     st.session_state.drug_search = ""
     st.session_state.pest_search = ""
-    st.session_state.ingredient_search = "" # 성분 검색창도 함께 지우기!
+    st.session_state.ingredient_search = ""
 
 col_btn1, col_btn2 = st.columns([8, 2])
 with col_btn2:
     st.button("🔄 검색 조건 초기화", on_click=clear_search, use_container_width=True)
 # ---------------------------------------------------------
 
-# 5. 검색창 만들기 (3칸으로 확장!)
 col_search1, col_search2, col_search3 = st.columns(3)
 
 with col_search1:
     search_keyword = st.selectbox(
-        "💊 검색할 '약 이름' (예: 엑시렐)", 
+        "💊 검색할 '약 이름' (예: 엑시렐, 디져스, 세티스)", 
         options=[""] + drug_list,
         key='drug_search'
     )
@@ -63,26 +57,21 @@ with col_search2:
     )
 
 with col_search3:
-    # 성분/계통/기작은 자유롭게 칠 수 있도록 text_input 사용
     ingredient_keyword = st.text_input(
         "🧪 '성분/계통/기작' 입력 (예: 플루오피람, 28)", 
         "",
         key='ingredient_search'
     )
 
-# 6. 검색 로직 (셋 중 하나라도 입력되면 실행)
 if search_keyword or pest_keyword or ingredient_keyword:
     filtered_df = df.copy()
     
-    # 약 이름 필터링
     if search_keyword:
         filtered_df = filtered_df[filtered_df['약명'].astype(str).str.contains(search_keyword, case=False, na=False, regex=False)]
         
-    # 해충 이름 필터링
     if pest_keyword:
         filtered_df = filtered_df[filtered_df['병명'].astype(str).str.contains(pest_keyword, case=False, na=False, regex=False)]
 
-    # ⭐️ 성분/계통/기작 필터링 (여러 열을 동시에 뒤져서 하나라도 걸리면 합격!)
     if ingredient_keyword:
         mask = (
             filtered_df['성분1(한글)'].astype(str).str.contains(ingredient_keyword, case=False, na=False, regex=False) |
