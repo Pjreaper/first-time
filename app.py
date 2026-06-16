@@ -34,44 +34,66 @@ for pests in df['병명'].dropna().astype(str):
 pest_list = sorted(list(set([p for p in all_pests if p])))
 
 # ---------------------------------------------------------
-# 💡 초기화 버튼과 세션 상태(메모장) 로직 추가
+# 💡 초기화 버튼과 세션 상태 로직
 def clear_search():
     st.session_state.drug_search = ""
     st.session_state.pest_search = ""
+    st.session_state.ingredient_search = "" # 성분 검색창도 함께 지우기!
 
 col_btn1, col_btn2 = st.columns([8, 2])
 with col_btn2:
     st.button("🔄 검색 조건 초기화", on_click=clear_search, use_container_width=True)
 # ---------------------------------------------------------
 
-# 5. 검색창 만들기
-col_search1, col_search2 = st.columns(2)
+# 5. 검색창 만들기 (3칸으로 확장!)
+col_search1, col_search2, col_search3 = st.columns(3)
 
 with col_search1:
     search_keyword = st.selectbox(
-        "💊 검색할 '약 이름'을 선택하거나 입력하세요", 
+        "💊 검색할 '약 이름' (예: 엑시렐)", 
         options=[""] + drug_list,
         key='drug_search'
     )
 
 with col_search2:
     pest_keyword = st.selectbox(
-        "🐛 방제할 '해충(적용대상)'을 선택하거나 입력하세요", 
+        "🐛 방제할 '해충(적용대상)' (예: 진딧물)", 
         options=[""] + pest_list,
         key='pest_search'
     )
 
-# 6. 검색 로직
-if search_keyword or pest_keyword:
+with col_search3:
+    # 성분/계통/기작은 자유롭게 칠 수 있도록 text_input 사용
+    ingredient_keyword = st.text_input(
+        "🧪 '성분/계통/기작' 입력 (예: 플루오피람, 28)", 
+        "",
+        key='ingredient_search'
+    )
+
+# 6. 검색 로직 (셋 중 하나라도 입력되면 실행)
+if search_keyword or pest_keyword or ingredient_keyword:
     filtered_df = df.copy()
     
     # 약 이름 필터링
     if search_keyword:
-        filtered_df = filtered_df[filtered_df['약명'].astype(str).str.contains(search_keyword, case=False, na=False)]
+        filtered_df = filtered_df[filtered_df['약명'].astype(str).str.contains(search_keyword, case=False, na=False, regex=False)]
         
     # 해충 이름 필터링
     if pest_keyword:
-        filtered_df = filtered_df[filtered_df['병명'].astype(str).str.contains(pest_keyword, case=False, na=False)]
+        filtered_df = filtered_df[filtered_df['병명'].astype(str).str.contains(pest_keyword, case=False, na=False, regex=False)]
+
+    # ⭐️ 성분/계통/기작 필터링 (여러 열을 동시에 뒤져서 하나라도 걸리면 합격!)
+    if ingredient_keyword:
+        mask = (
+            filtered_df['성분1(한글)'].astype(str).str.contains(ingredient_keyword, case=False, na=False, regex=False) |
+            filtered_df['성분2(한글)'].astype(str).str.contains(ingredient_keyword, case=False, na=False, regex=False) |
+            filtered_df['성분1계통'].astype(str).str.contains(ingredient_keyword, case=False, na=False, regex=False) |
+            filtered_df['성분2계통'].astype(str).str.contains(ingredient_keyword, case=False, na=False, regex=False) |
+            filtered_df['작용기작'].astype(str).str.contains(ingredient_keyword, case=False, na=False, regex=False) |
+            filtered_df['성분1작용기작'].astype(str).str.contains(ingredient_keyword, case=False, na=False, regex=False) |
+            filtered_df['성분2작용기작'].astype(str).str.contains(ingredient_keyword, case=False, na=False, regex=False)
+        )
+        filtered_df = filtered_df[mask]
 
     if filtered_df.empty:
         st.warning("검색 조건에 맞는 약제가 없습니다. 이름을 다시 확인해주세요.")
@@ -105,16 +127,14 @@ if search_keyword or pest_keyword:
                 st.write(f"**· 작용기작:** {base_info['작용기작']}")
                 st.write(f"**· 제형:** {base_info['제형']}")
                 st.write(f"**· 목적/구분:** {base_info['목적']} / {base_info['구분']}")
-                
-                # 💡 수정된 부분: st.markdown을 사용하고 <span> 태그로 변수를 감쌌습니다. 색상은 눈에 띄는 진한 빨간색(#C0392B)으로 설정했습니다.
                 st.markdown(f"**· 규격 및 단가:** {base_info['규격']}{base_info['단위']} / <span style='font-size: 1.4em; font-weight: bold; color: #C0392B;'>{price_formatted}</span>", unsafe_allow_html=True)
 
             with col2:
                 st.markdown("#### 🧪 성분 및 침투 정보")
-                st.write(f"**· 성분1:** {base_info['성분1(한글)']} ({base_info['성분1함량(%)']}%)") 
+                st.write(f"**· 성분1:** {base_info['성분1(한글)']} ({base_info['성분1함량(%)']}%)")
                 st.write(f"  - 계통: {base_info['성분1계통']} [{base_info['성분1작용기작']}]")
                 if base_info['성분2(한글)'] != "":
-                    st.write(f"**· 성분2:** {base_info['성분2(한글)']} ({base_info['성분2함량(%)']}%)") 
+                    st.write(f"**· 성분2:** {base_info['성분2(한글)']} ({base_info['성분2함량(%)']}%)")
                     st.write(f"  - 계통: {base_info['성분2계통']} [{base_info['성분2작용기작']}]")
                 
                 st.write(f"**· 살충경로:** {base_info['중독 방식(살충 경로)']}")
