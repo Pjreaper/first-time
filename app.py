@@ -94,7 +94,7 @@ if search_keyword or pest_keyword or ingredient_keyword:
             drug_all_data = df[df['약명'] == drug_name]
             base_info = drug_all_data.iloc[0]
 
-            st.subheader(f"🏷️ {base_info['약명']} ({base_info['유통사(제조사)']})  <span style='font-weight: bold; color: #1E8449;'>{base_info['작용기작']}")
+            st.subheader(f"🏷️ {base_info['약명']} ({base_info['유통사(제조사)']})  {base_info['작용기작'<span style='font-weight: bold; color: #1E8449;'>]}")
             
             price = base_info['판매단가']
             if pd.isna(price) or str(price).strip() == "":
