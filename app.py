@@ -245,4 +245,4 @@ elif menu == "🍄 살균제 검색":
                     st.write(f"**· 혼용 가능(살충):** {base_info_f.get('혼용가능한 살충제', '정보 없음')}")
                     st.write(f"**· 혼용 가능(살균):** {base_info_f.get('혼용가능한 살균제', '정보 없음')}")
                     st.markdown(f"**· 🚨 혼용 불가/주의:** <span style='color:red'>{base_info_f.get('혼용불가(주의)약제', '정보 없음')}</span>", unsafe_allow_html=True)
-                 st.markdown("---")
+                    st.markdown("---")
