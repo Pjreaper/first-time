@@ -3,7 +3,7 @@ import pandas as pd
 import gspread
 import json
 from google.oauth2.service_account import Credentials
-from datetime import datetime
+from datetime import datetime, timedelta
 
 st.set_page_config(page_title="아우내영농조합법인 농약 검색기", page_icon="🌱", layout="wide")
 
@@ -336,7 +336,7 @@ elif menu == "💬 건의사항 및 피드백":
                     client = gspread.authorize(creds)
                     sheet = client.open("아우내 건의사항").sheet1 
                     
-                    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    current_time = (datetime.now() + timedelta(hours=9)).strftime("%Y-%m-%d %H:%M:%S")
                     
                     sheet.insert_row([current_time, user_name, user_feedback], 2)
                     
