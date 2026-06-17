@@ -5,7 +5,7 @@ import json
 from google.oauth2.service_account import Credentials
 from datetime import datetime
 
-st.set_page_config(page_title="아우내 영농조합법인 농약 검색기", page_icon="🌱", layout="wide")
+st.set_page_config(page_title="아우내영농조합법인 농약 검색기", page_icon="🌱", layout="wide")
 
 st.markdown("""
     <style>
@@ -23,7 +23,7 @@ st.markdown("""
         
         /* (2) 모바일 전용: 좌측 상단 사이드바 열기 버튼( > 모양 ) 눈에 확 띄게 만들기 */
         button[data-testid="collapsedControl"] {
-            background-color: #1E8449 !important; /* 아우내 시그니처 초록색 */
+            background-color: #1E8449 !important; /* 시그니처 초록색 */
             color: white !important;
             border-radius: 8px !important;
             transform: scale(1.4) !important; /* 버튼 크기 1.4배 확대 */
@@ -53,41 +53,90 @@ except Exception as e:
 
 st.sidebar.title("🔍 아우내영농조합법인 살충/살균 검색기")
 st.sidebar.markdown("---")
+
 menu = st.sidebar.radio(
-    "검색할 농약을 선택하세요", 
-    ["🐛 살충제 검색", "🍄 살균제 검색", "💬 건의사항 및 피드백"]
+    "메뉴를 선택하세요", 
+    ["📢 법인 공지사항", "🐛 살충제 검색", "🍄 살균제 검색", "💬 건의사항 및 피드백"]
 )
 st.sidebar.markdown("---")
 
 st.markdown("""
     <div style='background-color: #FEF9E7; padding: 15px; border-radius: 8px; border-left: 6px solid #F4D03F; margin-bottom: 20px;'>
         <span style='font-size: 1.2em; font-weight: bold; color: #7D6608;'>📱 스마트폰(모바일) 이용자 안내:</span> <br>
-        화면에 맨 왼쪽 위 '화살표( > ) 버튼'</b>을 누르시면 살충제/살균제 선택 창이 나타납니다!
+        화면에 맨 왼쪽 위 <b>'화살표( > ) 버튼'</b>을 누르시면 살충제/살균제/공지사항 선택 창이 나타납니다!
     </div>
 """, unsafe_allow_html=True)
 
-st.markdown("""
-<div style='background-color: #E8F8F5; padding: 22px; border-radius: 12px; border-left: 6px solid #117A65; margin-bottom: 25px;'>
-    <h3 style='margin-top:0; color: #117A65; font-size: 1.5em;'>🧪 아우내 영농조합법인 올바른 농약 혼용(섞어치기) 순서</h3>
-    <p style='color: #2C3E50; font-size: 1.1em;'>여러 가지 농약을 한 탱크에 섞을 때는 <b>'물에 잘 안 녹는 제형'</b>부터 순서대로 넣어야 약이 엉기거나 떡이 지지 않습니다!</p>
-    <div style='background-color: white; padding: 15px; border-radius: 8px; border: 1px solid #D5F5E3; margin-top: 15px;'>
-        <ol style='font-size: 1.2em; line-height: 2.0; color: #239B56; font-weight: bold; margin-bottom: 0;'>
-            <li style='color: #2C3E50;'>💧 <span style='color: #117A65;'>[물 채우기]</span></li>
-            <li>📦 수화제 / 입상수화제 <span style='font-weight: normal; color: #5D6D7E; font-size: 0.9em;'></span></li>
-            <li>🥛 액상수화제 <span style='font-weight: normal; color: #5D6D7E; font-size: 0.9em;'></span></li>
-            <li>🧪 액제 / 수용제 <span style='font-weight: normal; color: #5D6D7E; font-size: 0.9em;'></span></li>
-            <li>🛢️ 유제 <span style='font-weight: normal; color: #5D6D7E; font-size: 0.9em;'>반드시 가장 나중에</span></li>
-            <li style='color: #2C3E50;'>🌿 <span style='color: #2E4053;'>[맨 마지막]</span> 전착제 및 4종 복합 영양제 추가</span></li>
-        </ol>
+
+if menu in ["🐛 살충제 검색", "🍄 살균제 검색"]:
+    st.markdown("""
+    <div style='background-color: #E8F8F5; padding: 22px; border-radius: 12px; border-left: 6px solid #117A65; margin-bottom: 25px;'>
+        <h3 style='margin-top:0; color: #117A65; font-size: 1.5em;'>🧪 아우내 영농조합법인 올바른 농약 혼용(섞어치기) 순서</h3>
+        <p style='color: #2C3E50; font-size: 1.1em;'>여러 가지 농약을 한 탱크에 섞을 때는 <b>'물에 잘 안 녹는 제형'</b>부터 순서대로 넣어야 약이 엉기거나 떡이 지지 않습니다!</p>
+        <div style='background-color: white; padding: 15px; border-radius: 8px; border: 1px solid #D5F5E3; margin-top: 15px;'>
+            <ol style='font-size: 1.2em; line-height: 2.0; color: #239B56; font-weight: bold; margin-bottom: 0;'>
+                <li style='color: #2C3E50;'>💧 <span style='color: #117A65;'>[물 채우기]</span></li>
+                <li style='color: #2C3E50;'>📦 <span style='color: #239B56;'>수화제 / 입상수화제</span></li>
+                <li style='color: #2C3E50;'>🥛 <span style='color: #239B56;'>액상수화제</span></li>
+                <li style='color: #2C3E50;'>🧪 <span style='color: #239B56;'>액제 / 수용제</span></li>
+                <li style='color: #2C3E50;'>🛢️ <span style='color: #239B56;'>유제</span> <span style='font-weight: normal; color: #C0392B; font-size: 0.9em; font-weight: bold;'>반드시 가장 나중에!</span></li>
+                <li style='color: #2C3E50;'>🌿 <span style='color: #2E4053;'>[맨 마지막]</span> 전착제 및 4종 복합 영양제 추가</li>
+            </ol>
+        </div>
+        <p style='color: #7B7D7D; margin-top: 12px; margin-bottom: 0; font-size: 0.95em;'>
+            ⚠️ <b>현장 필수 지침:</b> 한 가지 약을 넣고 <span style='color: #117A65; font-weight:bold;'>완전하게 다 녹은 것을 확인한 후</span> 다음 약을 넣으셔야 약해가 없습니다. 알칼리성 약제(보르도액 등)는 혼용 금지!
+        </p>
     </div>
-    <p style='color: #7B7D7D; margin-top: 12px; margin-bottom: 0; font-size: 0.95em;'>
-        ⚠️ <b>현장 필수 지침:</b> 한 가지 약을 넣고 <span style='color: #117A65; font-weight:bold;'>완전하게 다 녹은 것을 확인한 후</span> 다음 약을 넣으셔야 약해가 없습니다. 알칼리성 약제(보르도액 등)는 혼용 금지!
-    </p>
-</div>
-""", unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
 
-if menu == "🐛 살충제 검색":
+if menu == "📢 법인 공지사항":
+    st.title("📢 아우내영농조합법인 공지사항")
+    st.markdown("조합원 여러분을 위한 법인의 주요 일정 및 안내문입니다.")
+    st.markdown("---")
+    
+    today = datetime.now().date()
+    
+    # ----------------------------------------------------
+    # [공지사항 항목 1] (D-Day 기능 적용 예시)
+    # 아래의 datetime(연도, 월, 일) 부분만 수정해주시면 D-Day가 알아서 바뀝니다!
+    # ----------------------------------------------------
+    target_date1 = datetime(2026, 7, 25).date() 
+    diff1 = (target_date1 - today).days
+    
+    if diff1 > 0:
+        d_day_text1 = f"D-{diff1}"
+    elif diff1 == 0:
+        d_day_text1 = "D-Day (오늘)"
+    else:
+        d_day_text1 = f"D+{abs(diff1)} (종료)"
+        
+    st.markdown(f"""
+    <div style='background-color: #F7F9F9; padding: 22px; border-radius: 12px; border-left: 6px solid #2980B9; margin-bottom: 20px; position: relative;'>
+        <span style='background-color: #2980B9; color: white; padding: 5px 12px; border-radius: 20px; font-weight: bold; float: right; font-size: 1.1em;'>{d_day_text1}</span>
+        <h3 style='margin-top: 0; color: #2C3E50;'>📌 2026년 제1기 부가가치세 확정신고 및 정산 서류 제출 안내</h3>
+        <p style='color: #7F8C8D; font-size: 0.95em; margin-bottom: 15px;'>📅 목표 기한일: 2026년 07월 25일</p>
+        <p style='color: #34495E; font-size: 1.1em; line-height: 1.6;'>
+            조합원 여러분께서는 기한 내에 관련 <b>세금계산서 및 영수증 원본</b>을 법인 사무실로 제출해 주시기 바랍니다. 기한이 지나면 정산 처리가 어려울 수 있으니 일정을 꼭 준수해 주세요.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+
+    st.markdown("""
+    <div style='background-color: #F7F9F9; padding: 22px; border-radius: 12px; border-left: 6px solid #7F8C8D; margin-bottom: 20px;'>
+        <h3 style='margin-top: 0; color: #2C3E50;'>🚀 농약 혼용 검색 시스템 시범 운영 및 오픈</h3>
+        <p style='color: #7F8C8D; font-size: 0.95em; margin-bottom: 15px;'>📅 등록일: 2026년 06월 17일</p>
+        <p style='color: #34495E; font-size: 1.1em; line-height: 1.6;'>
+            조합원분들의 안전하고 과학적인 영농 활동을 지원하기 위해 법인 자체 <b>'농약 혼용 가부 검색 시스템'</b>을 구축하였습니다. <br>
+            현재 살충제 및 살균제 데이터가 등록되어 있으며, 이용 중 추가를 원하시는 농약이나 불편한 점이 있다면 언제든 좌측 메뉴의 <b>'💬 건의사항 및 피드백'</b> 방에 남겨주세요!
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+
+
+elif menu == "🐛 살충제 검색":
     st.title("🐛 살충제 검색 시스템")
     st.markdown("**처방과 혼용 가부를 한눈에!** 검색 조건을 입력하세요.")
     st.markdown("**아직 부족한 점이 많습니다. 많은 피드백 부탁드립니다.**")
@@ -185,6 +234,7 @@ if menu == "🐛 살충제 검색":
                     st.markdown(f"{base_info['작용원리']}")
                 st.markdown("---")
 
+
 elif menu == "🍄 살균제 검색":
     st.title("🍄 살균제 검색 시스템")
     st.markdown("**처방과 혼용 가부를 한눈에!** 검색 조건을 입력하세요.")
@@ -257,7 +307,7 @@ elif menu == "🍄 살균제 검색":
                 with col2:
                     st.markdown("#### 🧪 성분 및 작용 원리")
                     st.write(f"**· 성분1:** {base_info_f.get('성분1(한글)', '')} ({base_info_f.get('성분1함량(%)', '')}%)")
-                    st.write(f"  - 계통: {base_info_f.get('성분1계통', '')} [{base_info_f.get('성분1작용기작', '')}]")
+                    st.write(f"   - 계통: {base_info_f.get('성분1계통', '')} [{base_info_f.get('성분1작용기작', '')}]")
                     st.write(f"**· 작용원리 1:** {base_info_f.get('작용원리1', '정보 없음')}")
                     st.write(f"**· 작용원리 2:** {base_info_f.get('작용원리2', '정보 없음')}")
 
@@ -270,6 +320,7 @@ elif menu == "🍄 살균제 검색":
                     st.write(f"**· 혼용 가능(살균):** {base_info_f.get('혼용가능한 살균제', '정보 없음')}")
                     st.markdown(f"**· 🚨 혼용 불가/주의:** <span style='color:red'>{base_info_f.get('혼용불가(주의)약제', '정보 없음')}</span>", unsafe_allow_html=True)
                     st.markdown("---")
+
 
 elif menu == "💬 건의사항 및 피드백":
     st.title("💬 아우내영농조합법인 건의사항")
