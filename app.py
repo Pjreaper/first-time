@@ -297,7 +297,7 @@ elif menu == "💬 건의사항 및 피드백":
                     )
                     
                     client = gspread.authorize(creds)
-                    sheet = client.open("아우내_건의사항").sheet1 
+                    sheet = client.open("아우내 건의사항").sheet1 
                     
                     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     
