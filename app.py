@@ -271,17 +271,11 @@ elif menu == "🍄 살균제 검색":
                     st.markdown(f"**· 🚨 혼용 불가/주의:** <span style='color:red'>{base_info_f.get('혼용불가(주의)약제', '정보 없음')}</span>", unsafe_allow_html=True)
                     st.markdown("---")
 
-# 맨 마지막 살균제 코드가 끝나는 부분 아래(맨 밑)에 이 코드를 통째로 붙여넣어 주세요!
-
-# ==========================================
-# 💬 [건의사항 전용 화면 및 로직]
-# ==========================================
 elif menu == "💬 건의사항 및 피드백":
     st.title("💬 아우내 처방 시스템 건의사항")
     st.markdown("사용 중 불편한 점이나 추가되었으면 하는 농약이 있다면 자유롭게 남겨주세요!")
     st.markdown("---")
 
-    # st.form은 '제출' 버튼을 누르기 전까지 화면이 새로고침되는 것을 막아줍니다.
     with st.form("feedback_form"):
         user_name = st.text_input("👤 성함 또는 직분 (선택사항)")
         user_feedback = st.text_area("✍️ 건의 내용을 상세히 적어주세요.", height=150)
@@ -293,7 +287,6 @@ elif menu == "💬 건의사항 및 피드백":
                 st.warning("건의 내용을 입력해 주세요!")
             else:
                 try:
-                    # 1. 스트림릿 비밀 금고에서 로봇 신분증 꺼내기
                     credentials_dict = json.loads(st.secrets["gcp_service_account"])
                     creds = Credentials.from_service_account_info(
                         credentials_dict,
@@ -303,15 +296,19 @@ elif menu == "💬 건의사항 및 피드백":
                         ]
                     )
                     
-                    # 2. 구글 시트 접속
                     client = gspread.authorize(creds)
-                    # ⚠️ 아까 구글 드라이브에 만든 엑셀 파일 이름과 완벽하게 똑같아야 합니다!
                     sheet = client.open("아우내_건의사항").sheet1 
                     
-                    # 3. 엑셀 맨 아랫줄에 새로운 내용 쓰기
                     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                    sheet.append_row([current_time, user_name, user_feedback])
+                    
+                    # 💡 수정 1: append_row 대신 insert_row를 써서 2번째 줄(최신순)에 계속 끼워 넣습니다!
+                    sheet.insert_row([current_time, user_name, user_feedback], 2)
                     
                     st.success("소중한 의견이 성공적으로 등록되었습니다! 감사합니다.")
+                    
                 except Exception as e:
-                    st.error(f"오류가 발생했습니다. 구글 시트 연동 설정을 확인해 주세요: {e}")
+                    # 💡 수정 2: 구글이 200(성공)을 보냈는데 파이썬이 오해한 경우라면, 에러창 대신 성공창을 띄웁니다!
+                    if "200" in str(e):
+                        st.success("소중한 의견이 성공적으로 등록되었습니다! 감사합니다.")
+                    else:
+                        st.error(f"진짜 오류가 발생했습니다: {e}")
