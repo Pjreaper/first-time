@@ -72,12 +72,12 @@ st.markdown("""
     <p style='color: #2C3E50; font-size: 1.1em;'>여러 가지 농약을 한 탱크에 섞을 때는 <b>'물에 잘 안 녹는 제형'</b>부터 순서대로 넣어야 약이 엉기거나 떡이 지지 않습니다!</p>
     <div style='background-color: white; padding: 15px; border-radius: 8px; border: 1px solid #D5F5E3; margin-top: 15px;'>
         <ol style='font-size: 1.2em; line-height: 2.0; color: #239B56; font-weight: bold; margin-bottom: 0;'>
-            <li style='color: #2C3E50;'>💧 <span style='color: #117A65;'>[물 채우기]</li>
-            <li>📦 수화제 / 입상수화제 <span style='font-weight: normal; color: #5D6D7E; font-size: 0.9em;'></li>
-            <li>🥛 액상수화제 <span style='font-weight: normal; color: #5D6D7E; font-size: 0.9em;'></li>
-            <li>🧪 액제 / 수용제 <span style='font-weight: normal; color: #5D6D7E; font-size: 0.9em;'></li>
+            <li style='color: #2C3E50;'>💧 <span style='color: #117A65;'>[물 채우기]</span></li>
+            <li>📦 수화제 / 입상수화제 <span style='font-weight: normal; color: #5D6D7E; font-size: 0.9em;'></span></li>
+            <li>🥛 액상수화제 <span style='font-weight: normal; color: #5D6D7E; font-size: 0.9em;'></span></li>
+            <li>🧪 액제 / 수용제 <span style='font-weight: normal; color: #5D6D7E; font-size: 0.9em;'></span></li>
             <li>🛢️ 유제 <span style='font-weight: normal; color: #5D6D7E; font-size: 0.9em;'>반드시 가장 나중에</span></li>
-            <li style='color: #2C3E50;'>🌿 <span style='color: #2E4053;'>[맨 마지막]</span> 전착제 및 4종 복합 영양제 추가</li>
+            <li style='color: #2C3E50;'>🌿 <span style='color: #2E4053;'>[맨 마지막]</span> 전착제 및 4종 복합 영양제 추가</span></li>
         </ol>
     </div>
     <p style='color: #7B7D7D; margin-top: 12px; margin-bottom: 0; font-size: 0.95em;'>
