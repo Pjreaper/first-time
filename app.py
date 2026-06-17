@@ -273,7 +273,8 @@ elif menu == "🍄 살균제 검색":
 
 elif menu == "💬 건의사항 및 피드백":
     st.title("💬 아우내 처방 시스템 건의사항")
-    st.markdown("사용 중 불편한 점이나 추가되었으면 하는 농약이 있다면 자유롭게 남겨주세요!")
+    st.markdown("사용 중 건의사항을 자유롭게 남겨주세요!")
+    st.markdown("추가되었으면 하는 농약, 불편한점, 칭찬할점 etc.")
     st.markdown("---")
 
     with st.form("feedback_form"):
