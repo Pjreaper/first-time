@@ -61,7 +61,7 @@ st.markdown("""
         화면에 맨 왼쪽 위 '화살표( > ) 버튼'</b>을 누르시면 살충제/살균제 선택 창이 나타납니다!
     </div>
 """, unsafe_allow_html=True)
-# 💡 [추가] 농민들을 위한 올바른 농약 혼용 순서 전광판 (시각화 배너)
+
 st.markdown("""
     <div style='background-color: #E8F8F5; padding: 22px; border-radius: 12px; border-left: 6px solid #117A65; margin-bottom: 25px;'>
         <h3 style='margin-top:0; color: #117A65; font-size: 1.5em;'>🧪 아우내 영농조합법인 올바른 농약 혼용(섞어치기) 순서</h3>
