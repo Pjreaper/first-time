@@ -241,8 +241,7 @@ elif menu == "🍄 살균제 검색":
                     st.markdown("#### 📋 병해별 사용 기준")
                     for _, row in drug_all_data_f.iterrows():
                         st.markdown(f"**[{row['병명']}]** <span style='font-size: 1.4em; font-weight: bold; color: #D35400;'>{row.get('사용량', '')}</span> / {row.get('안전사용기준', '')}", unsafe_allow_html=True)
-                
-                # 💡 base_info_f 로 이름을 맞추고, .get()을 써서 엑셀에 빈칸이거나 열 이름이 달라도 에러가 안 나게 만들었습니다.
+                 # 💡 base_info_f 로 이름을 맞추고, .get()을 써서 엑셀에 빈칸이거나 열 이름이 달라도 에러가 안 나게 만들었습니다.
                 st.markdown("---")
                 st.write(f"**· 혼용 가능(살충):** {base_info_f.get('혼용가능한 살충제', '정보 없음')}")
                 st.write(f"**· 혼용 가능(살균):** {base_info_f.get('혼용가능한 살균제', '정보 없음')}")
