@@ -273,8 +273,8 @@ elif menu == "🍄 살균제 검색":
 
 elif menu == "💬 건의사항 및 피드백":
     st.title("💬 아우내 처방 시스템 건의사항")
-    st.markdown("사용 중 건의사항을 자유롭게 남겨주세요!")
-    st.markdown("추가되었으면 하는 농약, 불편한점, 칭찬할점 etc.")
+    st.markdown("법인에 대해서 or 사이트 사용에 대해서 건의사항을 자유롭게 남겨주세요!")
+    st.markdown("추가희망 농약 / 불편사항 / 칭찬 etc. Whatever")
     st.markdown("---")
 
     with st.form("feedback_form"):
@@ -302,13 +302,11 @@ elif menu == "💬 건의사항 및 피드백":
                     
                     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     
-                    # 💡 수정 1: append_row 대신 insert_row를 써서 2번째 줄(최신순)에 계속 끼워 넣습니다!
                     sheet.insert_row([current_time, user_name, user_feedback], 2)
                     
                     st.success("소중한 의견이 성공적으로 등록되었습니다! 감사합니다.")
                     
                 except Exception as e:
-                    # 💡 수정 2: 구글이 200(성공)을 보냈는데 파이썬이 오해한 경우라면, 에러창 대신 성공창을 띄웁니다!
                     if "200" in str(e):
                         st.success("소중한 의견이 성공적으로 등록되었습니다! 감사합니다.")
                     else:
