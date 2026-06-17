@@ -18,7 +18,7 @@ st.markdown("""
         }
         /* 사이드바 제목 크기 키우기 */
         .stSidebar h1, .stSidebar h2, .stSidebar h3 {
-            font-size: 1.7rem !important;
+            font-size: 1.6rem !important;
         }
         
         /* (2) 모바일 전용: 좌측 상단 사이드바 열기 버튼( > 모양 ) 눈에 확 띄게 만들기 */
