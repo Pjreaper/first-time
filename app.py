@@ -1,10 +1,8 @@
 import streamlit as st
 import pandas as pd
 
-# 1. 페이지 기본 설정
 st.set_page_config(page_title="아우내 영농조합법인 농약 검색기", page_icon="🌱", layout="wide")
 
-# 🔥 2. 디자인 특수 마법 코드 (글씨 크기 및 모바일 버튼 개선)
 st.markdown("""
     <style>
         /* (1) 사이드바 라디오 버튼 글씨 크기 대폭 키우기 */
@@ -31,7 +29,6 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 3. 엑셀 데이터 불러오기
 @st.cache_data
 def load_data():
     file_name = "26아우내영농조합법인 농약 혼용가부표(충).xlsx"
@@ -50,8 +47,6 @@ except Exception as e:
     st.error(f"엑셀 파일을 찾을 수 없거나 시트 이름이 틀렸습니다...\n에러: {e}")
     st.stop()
 
-# ---------------------------------------------------------
-# 4. 사이드바 (메뉴 네비게이션)
 st.sidebar.title("🔍 아우내 처방 시스템")
 st.sidebar.markdown("---")
 menu = st.sidebar.radio(
@@ -59,9 +54,7 @@ menu = st.sidebar.radio(
     ["🐛 살충제 검색", "🍄 살균제 검색"]
 )
 st.sidebar.markdown("---")
-# ---------------------------------------------------------
 
-# 💡 5. 모바일 이용자를 위한 최상단 친절 안내판 (모든 화면 공통 노출)
 st.markdown("""
     <div style='background-color: #FEF9E7; padding: 15px; border-radius: 8px; border-left: 6px solid #F4D03F; margin-bottom: 20px;'>
         <span style='font-size: 1.2em; font-weight: bold; color: #7D6608;'>📱 스마트폰(모바일) 이용자 안내:</span> <br>
@@ -70,9 +63,6 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# ==========================================
-# 🐛 [살충제 전용 화면 및 로직]
-# ==========================================
 if menu == "🐛 살충제 검색":
     st.title("🐛 살충제 검색 시스템")
     st.markdown("**처방과 혼용 가부를 한눈에!** 검색 조건을 입력하세요.")
@@ -171,9 +161,6 @@ if menu == "🐛 살충제 검색":
                     st.markdown(f"{base_info['작용원리']}")
                 st.markdown("---")
 
-# ==========================================
-# 🍄 [살균제 전용 화면 및 로직]
-# ==========================================
 elif menu == "🍄 살균제 검색":
     st.title("🍄 살균제 검색 시스템")
     st.markdown("**타이밍과 작용 원리를 한눈에!** 검색 조건을 입력하세요.")
