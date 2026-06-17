@@ -1,8 +1,10 @@
 import streamlit as st
 import pandas as pd
 
+# 1. 페이지 기본 설정
 st.set_page_config(page_title="아우내 영농조합법인 농약 검색기", page_icon="🐛", layout="wide")
 
+# 2. 엑셀 데이터 불러오기
 @st.cache_data
 def load_data():
     file_name = "26아우내영농조합법인 농약 혼용가부표(충).xlsx"
@@ -16,11 +18,13 @@ except Exception as e:
     st.error(f"엑셀 파일을 찾을 수 없습니다...\n에러: {e}")
     st.stop()
 
+# 3. 화면 상단 타이틀
 st.title("🌱 아우내 영농조합법인 살충제 검색 시스템")
 st.markdown("**처방과 혼용 가부를 한눈에!** 검색 조건을 입력하세요.")
 st.markdown("**아직 부족한 점이 많습니다. 많은 피드백 부탁드립니다.**")
 st.markdown("---")
 
+# 4. 엑셀에서 검색용 '전체 목록' 자동 추출하기
 drug_list = sorted([str(x) for x in df['약명'].unique() if str(x).strip() != ""])
 
 all_pests = []
@@ -40,6 +44,7 @@ with col_btn2:
     st.button("🔄 검색 조건 초기화", on_click=clear_search, use_container_width=True)
 # ---------------------------------------------------------
 
+# 5. 검색창 만들기
 col_search1, col_search2, col_search3 = st.columns(3)
 
 with col_search1:
@@ -63,6 +68,7 @@ with col_search3:
         key='ingredient_search'
     )
 
+# 6. 검색 로직
 if search_keyword or pest_keyword or ingredient_keyword:
     filtered_df = df.copy()
     
@@ -94,7 +100,8 @@ if search_keyword or pest_keyword or ingredient_keyword:
             drug_all_data = df[df['약명'] == drug_name]
             base_info = drug_all_data.iloc[0]
 
-           st.markdown(f"### 🏷️ {base_info['약명']} ({base_info['유통사(제조사)']}) &nbsp;&nbsp; <span style='font-weight: bold; color: #1E8449;'>[{base_info['작용기작']}]</span>", unsafe_allow_html=True)
+            # 💡 이 부분이 완벽하게 수정되었습니다!
+            st.markdown(f"### 🏷️ {base_info['약명']} ({base_info['유통사(제조사)']}) &nbsp;&nbsp; <span style='font-weight: bold; color: #1E8449;'>[{base_info['작용기작']}]</span>", unsafe_allow_html=True)
             
             price = base_info['판매단가']
             if pd.isna(price) or str(price).strip() == "":
@@ -124,7 +131,7 @@ if search_keyword or pest_keyword or ingredient_keyword:
                 st.write(f"  - 계통: {base_info['성분1계통']} [{base_info['성분1작용기작']}]")
                 if base_info['성분2(한글)'] != "":
                     st.write(f"**· 성분2:** {base_info['성분2(한글)']} ({base_info['성분2함량(%)']}%)")
-                    st.write(f"  - 계통: {base_info['성분2계통']} [{base_info['성분2작용기작']}]")
+                    st.write(f"  - carrot: {base_info['성분2계통']} [{base_info['성분2작용기작']}]")
                 
                 st.write(f"**· 살충경로:** {base_info['중독 방식(살충 경로)']}")
                 st.write(f"**· 침투/침달성:** {base_info['침투이행성']} / {base_info['침달성']}")
