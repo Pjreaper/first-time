@@ -61,6 +61,28 @@ st.markdown("""
         화면에 맨 왼쪽 위 '화살표( > ) 버튼'</b>을 누르시면 살충제/살균제 선택 창이 나타납니다!
     </div>
 """, unsafe_allow_html=True)
+# 💡 [추가] 농민들을 위한 올바른 농약 혼용 순서 전광판 (시각화 배너)
+st.markdown("""
+    <div style='background-color: #E8F8F5; padding: 22px; border-radius: 12px; border-left: 6px solid #117A65; margin-bottom: 25px;'>
+        <h3 style='margin-top:0; color: #117A65; font-size: 1.5em;'>🧪 아우내 영농조합법인 올바른 농약 혼용(섞어치기) 순서</h3>
+        <p style='color: #2C3E50; font-size: 1.1em;'>여러 가지 농약을 한 탱크에 섞을 때는 <b>'물에 잘 안 녹는 제형'</b>부터 순서대로 넣어야 약이 엉기거나 떡이 지지 않습니다!</p>
+        
+        <div style='background-color: white; padding: 15px; border-radius: 8px; border: 1px solid #D5F5E3; margin-top: 15px;'>
+            <ol style='font-size: 1.2em; line-height: 2.0; color: #239B56; font-weight: bold; margin-bottom: 0;'>
+                <li style='color: #2C3E50;'>💧 <span style='color: #117A65;'>[물 채우기]</span> 살포용 탱크에 물을 <span style='color: #C0392B;'>반 이상(50~70%)</span> 먼저 채웁니다.</li>
+                <li>📦 수화제 / 입상수화제 <span style='font-weight: normal; color: #5D6D7E; font-size: 0.9em;'>(가루나 알갱이 약을 먼저 넣고 덩어리 없이 완벽히 녹입니다)</span></li>
+                <li>🥛 액상수화제 <span style='font-weight: normal; color: #5D6D7E; font-size: 0.9em;'>(걸쭉한 우유 빛깔 액체 약을 넣고 잘 저어줍니다)</span></li>
+                <li>🧪 액제 / 수용제 <span style='font-weight: normal; color: #5D6D7E; font-size: 0.9em;'>(맑은 액체나 물에 바로 녹는 성분의 약을 투입합니다)</span></li>
+                <li>🛢️ 유제 <span style='font-weight: normal; color: #5D6D7E; font-size: 0.9em;'>(기름 성분은 물 막을 형성하므로 <span style='color: #C0392B; font-weight:bold;'>반드시 가장 나중에</span> 넣어야 합니다)</span></li>
+                <li style='color: #2C3E50;'>🌿 <span style='color: #2E4053;'>[맨 마지막]</span> 전착제 및 4종 복합 영양제 추가</li>
+            </ol>
+        </div>
+        
+        <p style='color: #7B7D7D; margin-top: 12px; margin-bottom: 0; font-size: 0.95em;'>
+            ⚠️ <b>현장 필수 지침:</b> 한 가지 약을 넣고 <span style='color: #117A65; font-weight:bold;'>완전하게 다 녹은 것을 확인한 후</span> 다음 약을 넣으셔야 약해가 없습니다. 알칼리성 약제(보르도액 등)는 혼용 금지!
+        </p>
+    </div>
+""", unsafe_allow_html=True)
 
 
 if menu == "🐛 살충제 검색":
