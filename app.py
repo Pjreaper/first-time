@@ -237,12 +237,14 @@ elif menu == "🍄 살균제 검색":
                     st.write(f"**· 작용원리 1:** {base_info_f.get('작용원리1', '정보 없음')}")
                     st.write(f"**· 작용원리 2:** {base_info_f.get('작용원리2', '정보 없음')}")
 
-                with col3:
+               with col3:
                     st.markdown("#### 📋 병해별 사용 기준")
                     for _, row in drug_all_data_f.iterrows():
                         st.markdown(f"**[{row['병명']}]** <span style='font-size: 1.4em; font-weight: bold; color: #D35400;'>{row.get('사용량', '')}</span> / {row.get('안전사용기준', '')}", unsafe_allow_html=True)
+                
+                # 💡 base_info_f 로 이름을 맞추고, .get()을 써서 엑셀에 빈칸이거나 열 이름이 달라도 에러가 안 나게 만들었습니다.
                 st.markdown("---")
-                st.write(f"**· 혼용 가능(살충):** {base_info_f.get['혼용가능한 살충제']}")
-                st.write(f"**· 혼용 가능(살균):** {base_info_f.get['혼용가능한 살균제']}")
-                st.markdown(f"**· 🚨 혼용 불가/주의:** <span style='color:red'>{base_info_f.get['혼용불가(주의)약제']}</span>", unsafe_allow_html=True)
+                st.write(f"**· 혼용 가능(살충):** {base_info_f.get('혼용가능한 살충제', '정보 없음')}")
+                st.write(f"**· 혼용 가능(살균):** {base_info_f.get('혼용가능한 살균제', '정보 없음')}")
+                st.markdown(f"**· 🚨 혼용 불가/주의:** <span style='color:red'>{base_info_f.get('혼용불가(주의)약제', '정보 없음')}</span>", unsafe_allow_html=True)
                 st.markdown("---")
