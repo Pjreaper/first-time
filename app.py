@@ -51,7 +51,7 @@ except Exception as e:
     st.error(f"엑셀 파일을 찾을 수 없거나 시트 이름이 틀렸습니다...\n에러: {e}")
     st.stop()
 
-st.sidebar.title("🔍 아우내 처방 시스템")
+st.sidebar.title("🔍 아우내영농조합법인 살충/살균 검색기")
 st.sidebar.markdown("---")
 menu = st.sidebar.radio(
     "검색할 농약을 선택하세요", 
@@ -272,13 +272,13 @@ elif menu == "🍄 살균제 검색":
                     st.markdown("---")
 
 elif menu == "💬 건의사항 및 피드백":
-    st.title("💬 아우내 처방 시스템 건의사항")
+    st.title("💬 아우내영농조합법인 건의사항")
     st.markdown("법인에 대해서 or 사이트 사용에 대해서 건의사항을 자유롭게 남겨주세요!")
     st.markdown("추가희망 농약 / 불편사항 / 칭찬 etc. Whatever")
     st.markdown("---")
 
     with st.form("feedback_form"):
-        user_name = st.text_input("👤 성함 또는 직분 (선택사항)")
+        user_name = st.text_input("👤 성함 또는 별명 (선택사항)")
         user_feedback = st.text_area("✍️ 건의 내용을 상세히 적어주세요.", height=150)
         
         submitted = st.form_submit_button("🚀 의견 등록하기")
