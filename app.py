@@ -314,7 +314,7 @@ elif menu == "💬 건의사항 및 피드백":
     st.markdown("---")
 
     with st.form("feedback_form"):
-        user_name = st.text_input("👤 성함 또는 별명 (선택사항)")
+        user_name = st.text_input("👤 성함")
         user_feedback = st.text_area("✍️ 건의 내용을 상세히 적어주세요.", height=150)
         
         submitted = st.form_submit_button("🚀 의견 등록하기")
