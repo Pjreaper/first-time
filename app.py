@@ -323,6 +323,16 @@ elif menu == "💬 건의사항 및 피드백":
             if user_feedback.strip() == "":
                 st.warning("건의 내용을 입력해 주세요!")
             else:
+                # 💡 [방어막 2] 30초 도배 방지 타임락 (세션 상태 활용)
+                now = datetime.now()
+                if 'last_submit' in st.session_state:
+                    time_diff = (now - st.session_state.last_submit).total_seconds()
+                    if time_diff < 30:
+                        # 30초가 안 지났으면 남은 시간을 계산해서 에러창을 띄우고 아래 코드를 실행하지 않습니다.
+                        left_time = int(30 - time_diff)
+                        st.error(f"⏳ 도배 방지를 위해 {left_time}초 후에 다시 등록할 수 있습니다.")
+                        st.stop() # 여기서 코드 실행을 멈춤!
+
                 try:
                     credentials_dict = json.loads(st.secrets["gcp_service_account"])
                     creds = Credentials.from_service_account_info(
@@ -336,14 +346,19 @@ elif menu == "💬 건의사항 및 피드백":
                     client = gspread.authorize(creds)
                     sheet = client.open("아우내 건의사항").sheet1 
                     
+                    # (지난번 수정했던 KST 9시간 더하기 유지)
                     current_time = (datetime.now() + timedelta(hours=9)).strftime("%Y-%m-%d %H:%M:%S")
                     
-                    sheet.insert_row([current_time, user_name, user_feedback], 2)
+                    sheet.insert_row([current_time, user_name, user_feedback], 2, value_input_option='USER_ENTERED')
                     
                     st.success("소중한 의견이 성공적으로 등록되었습니다! 감사합니다.")
+                    # 💡 성공적으로 보냈다면, 방금 보낸 시간을 기록해둡니다.
+                    st.session_state.last_submit = now
                     
                 except Exception as e:
                     if "200" in str(e):
                         st.success("소중한 의견이 성공적으로 등록되었습니다! 감사합니다.")
+                        # 200 성공 버그일 때도 시간은 기록해줍니다.
+                        st.session_state.last_submit = now
                     else:
                         st.error(f"진짜 오류가 발생했습니다: {e}")
