@@ -58,7 +58,7 @@ st.sidebar.markdown("---")
 st.markdown("""
     <div style='background-color: #FEF9E7; padding: 15px; border-radius: 8px; border-left: 6px solid #F4D03F; margin-bottom: 20px;'>
         <span style='font-size: 1.2em; font-weight: bold; color: #7D6608;'>📱 스마트폰(모바일) 이용자 안내:</span> <br>
-        화면에 메뉴가 안 보이시면 <b>맨 왼쪽 위 '초기 네모/초록색 화살표( > ) 버튼'</b>을 누르시면 살충제/살균제 선택 창이 나타납니다!
+        화면에 맨 왼쪽 위 '화살표( > ) 버튼'</b>을 누르시면 살충제/살균제 선택 창이 나타납니다!
     </div>
 """, unsafe_allow_html=True)
 
@@ -163,7 +163,8 @@ if menu == "🐛 살충제 검색":
 
 elif menu == "🍄 살균제 검색":
     st.title("🍄 살균제 검색 시스템")
-    st.markdown("**타이밍과 작용 원리를 한눈에!** 검색 조건을 입력하세요.")
+    st.markdown("**처방과 혼용 가부를 한눈에!** 검색 조건을 입력하세요.")
+    st.markdown("**아직 부족한 점이 많습니다. 많은 피드백 부탁드립니다.**")
     st.markdown("---")
 
     drug_list_fungi = sorted([str(x) for x in df_fungi['약명'].unique() if str(x).strip() != ""])
@@ -240,4 +241,8 @@ elif menu == "🍄 살균제 검색":
                     st.markdown("#### 📋 병해별 사용 기준")
                     for _, row in drug_all_data_f.iterrows():
                         st.markdown(f"**[{row['병명']}]** <span style='font-size: 1.4em; font-weight: bold; color: #D35400;'>{row.get('사용량', '')}</span> / {row.get('안전사용기준', '')}", unsafe_allow_html=True)
+                st.markdown("---")
+                st.write(f"**· 혼용 가능(살충):** {base_info['혼용가능한 살충제']}")
+                st.write(f"**· 혼용 가능(살균):** {base_info['혼용가능한 살균제']}")
+                st.markdown(f"**· 🚨 혼용 불가/주의:** <span style='color:red'>{base_info['혼용불가(주의)약제']}</span>", unsafe_allow_html=True)
                 st.markdown("---")
