@@ -4,16 +4,41 @@ import pandas as pd
 # 1. 페이지 기본 설정
 st.set_page_config(page_title="아우내 영농조합법인 농약 검색기", page_icon="🌱", layout="wide")
 
-# 2. 엑셀 데이터 불러오기 (시트 2개 분리)
+# 🔥 2. 디자인 특수 마법 코드 (글씨 크기 및 모바일 버튼 개선)
+st.markdown("""
+    <style>
+        /* (1) 사이드바 라디오 버튼 글씨 크기 대폭 키우기 */
+        .stSidebar .stRadio p {
+            font-size: 1.4rem !important;
+            font-weight: bold !important;
+            color: #2C3E50 !important;
+            line-height: 2.0 !important;
+        }
+        /* 사이드바 제목 크기 키우기 */
+        .stSidebar h1, .stSidebar h2, .stSidebar h3 {
+            font-size: 2.0rem !important;
+        }
+        
+        /* (2) 모바일 전용: 좌측 상단 사이드바 열기 버튼( > 모양 ) 눈에 확 띄게 만들기 */
+        button[data-testid="collapsedControl"] {
+            background-color: #1E8449 !important; /* 아우내 시그니처 초록색 */
+            color: white !important;
+            border-radius: 8px !important;
+            transform: scale(1.4) !important; /* 버튼 크기 1.4배 확대 */
+            margin: 15px !important;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.3) !important; /* 그림자 효과 */
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+# 3. 엑셀 데이터 불러오기
 @st.cache_data
 def load_data():
     file_name = "26아우내영농조합법인 농약 혼용가부표(충).xlsx"
     
-    # 살충제 시트 불러오기
     df_insect = pd.read_excel(file_name, sheet_name="살충제목록")
     df_insect = df_insect.fillna("")
     
-    # 살균제 시트 불러오기
     df_fungi = pd.read_excel(file_name, sheet_name="살균제목록")
     df_fungi = df_fungi.fillna("")
     
@@ -26,16 +51,24 @@ except Exception as e:
     st.stop()
 
 # ---------------------------------------------------------
-# 3. 사이드바 (메뉴 네비게이션)
+# 4. 사이드바 (메뉴 네비게이션)
 st.sidebar.title("🔍 아우내 처방 시스템")
 st.sidebar.markdown("---")
 menu = st.sidebar.radio(
-    "어떤 약제를 검색하시겠습니까?", 
+    "검색할 농약을 선택하세요", 
     ["🐛 살충제 검색", "🍄 살균제 검색"]
 )
 st.sidebar.markdown("---")
-st.sidebar.info("💡 팁: 메뉴를 클릭하여 검색 모드를 전환하세요.")
 # ---------------------------------------------------------
+
+# 💡 5. 모바일 이용자를 위한 최상단 친절 안내판 (모든 화면 공통 노출)
+st.markdown("""
+    <div style='background-color: #FEF9E7; padding: 15px; border-radius: 8px; border-left: 6px solid #F4D03F; margin-bottom: 20px;'>
+        <span style='font-size: 1.2em; font-weight: bold; color: #7D6608;'>📱 스마트폰(모바일) 이용자 안내:</span> <br>
+        화면에 메뉴가 안 보이시면 <b>맨 왼쪽 위 '초기 네모/초록색 화살표( > ) 버튼'</b>을 누르시면 살충제/살균제 선택 창이 나타납니다!
+    </div>
+""", unsafe_allow_html=True)
+
 
 # ==========================================
 # 🐛 [살충제 전용 화면 및 로직]
@@ -46,7 +79,6 @@ if menu == "🐛 살충제 검색":
     st.markdown("**아직 부족한 점이 많습니다. 많은 피드백 부탁드립니다.**")
     st.markdown("---")
 
-    # 살충제 데이터 목록 추출
     drug_list = sorted([str(x) for x in df_insect['약명'].unique() if str(x).strip() != ""])
     all_pests = []
     for pests in df_insect['병명'].dropna().astype(str):
@@ -54,7 +86,6 @@ if menu == "🐛 살충제 검색":
         all_pests.extend(split_pests)
     pest_list = sorted(list(set([p for p in all_pests if p])))
 
-    # 살충제 초기화 버튼
     def clear_insect_search():
         st.session_state.insect_drug = ""
         st.session_state.insect_pest = ""
@@ -64,7 +95,6 @@ if menu == "🐛 살충제 검색":
     with col_btn2:
         st.button("🔄 살충제 검색 초기화", on_click=clear_insect_search, use_container_width=True)
 
-    # 살충제 검색창 3개
     col_search1, col_search2, col_search3 = st.columns(3)
     with col_search1:
         search_keyword = st.selectbox("💊 검색할 '약 이름' (예: 엑시렐)", options=[""] + drug_list, key='insect_drug')
@@ -73,7 +103,6 @@ if menu == "🐛 살충제 검색":
     with col_search3:
         ingredient_keyword = st.text_input("🧪 '성분/계통/기작' 입력 (예: 28)", "", key='insect_ing')
 
-    # 살충제 검색 로직
     if search_keyword or pest_keyword or ingredient_keyword:
         filtered_df = df_insect.copy()
         
@@ -150,7 +179,6 @@ elif menu == "🍄 살균제 검색":
     st.markdown("**타이밍과 작용 원리를 한눈에!** 검색 조건을 입력하세요.")
     st.markdown("---")
 
-    # 살균제 데이터 목록 추출
     drug_list_fungi = sorted([str(x) for x in df_fungi['약명'].unique() if str(x).strip() != ""])
     all_diseases = []
     for disease in df_fungi['병명'].dropna().astype(str):
@@ -158,7 +186,6 @@ elif menu == "🍄 살균제 검색":
         all_diseases.extend(split_disease)
     disease_list = sorted(list(set([d for d in all_diseases if d])))
 
-    # 살균제 초기화 버튼
     def clear_fungi_search():
         st.session_state.fungi_drug = ""
         st.session_state.fungi_disease = ""
@@ -168,7 +195,6 @@ elif menu == "🍄 살균제 검색":
     with col_btn2:
         st.button("🔄 살균제 검색 초기화", on_click=clear_fungi_search, use_container_width=True)
 
-    # 살균제 검색창 3개
     col_search1, col_search2, col_search3 = st.columns(3)
     with col_search1:
         search_keyword_f = st.selectbox("💊 검색할 '약 이름'", options=[""] + drug_list_fungi, key='fungi_drug')
@@ -177,7 +203,6 @@ elif menu == "🍄 살균제 검색":
     with col_search3:
         ingredient_keyword_f = st.text_input("🧪 '성분/계통/기작' 입력", "", key='fungi_ing')
 
-    # 살균제 검색 로직
     if search_keyword_f or disease_keyword or ingredient_keyword_f:
         filtered_df_f = df_fungi.copy()
         
@@ -219,7 +244,6 @@ elif menu == "🍄 살균제 검색":
 
                 with col2:
                     st.markdown("#### 🧪 성분 및 작용 원리")
-                    # 💡 살균제 전용: '작용원리1', '작용원리2'가 이곳에 출력됩니다!
                     st.write(f"**· 성분1:** {base_info_f.get('성분1(한글)', '')} ({base_info_f.get('성분1함량(%)', '')}%)")
                     st.write(f"  - 계통: {base_info_f.get('성분1계통', '')} [{base_info_f.get('성분1작용기작', '')}]")
                     st.write(f"**· 작용원리 1:** {base_info_f.get('작용원리1', '정보 없음')}")
