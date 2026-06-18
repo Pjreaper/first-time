@@ -4,6 +4,7 @@ import gspread
 import json
 from google.oauth2.service_account import Credentials
 from datetime import datetime, timedelta
+import streamlit.components.v1 as components
 
 st.set_page_config(page_title="아우내 영농조합법인 농약 검색기", page_icon="🌱", layout="wide")
 
@@ -59,6 +60,28 @@ menu = st.sidebar.radio(
     ["📢 법인 공지사항", "🐛 살충제 검색", "🍄 살균제 검색", "💬 건의사항 및 피드백"]
 )
 st.sidebar.markdown("---")
+
+components.html("""
+    <script>
+        // 전체 화면(부모 창)을 봅니다.
+        const doc = window.parent.document;
+        // 동그란 라디오 버튼들을 모두 찾습니다.
+        const radios = doc.querySelectorAll('input[type="radio"]');
+        
+        radios.forEach(radio => {
+            radio.addEventListener('click', () => {
+                // 📱 스마트폰 환경(화면 너비 768px 이하)일 때만 작동하도록 설정!
+                if (window.innerWidth <= 768) {
+                    // 사이드바 닫기 버튼( > )을 찾아서 투명 인간이 클릭하게 만듭니다.
+                    const closeBtn = doc.querySelector('[data-testid="collapsedControl"]');
+                    if (closeBtn) {
+                        closeBtn.click();
+                    }
+                }
+            });
+        });
+    </script>
+""", height=0, width=0)
 
 st.markdown("""
     <div style='background-color: #FEF9E7; padding: 15px; border-radius: 8px; border-left: 6px solid #F4D03F; margin-bottom: 20px;'>
