@@ -5,7 +5,7 @@ import json
 from google.oauth2.service_account import Credentials
 from datetime import datetime, timedelta
 
-st.set_page_config(page_title="아우내영농조합법인 농약 검색기", page_icon="🌱", layout="wide")
+st.set_page_config(page_title="아우내 영농조합법인 농약 검색기", page_icon="🌱", layout="wide")
 
 st.markdown("""
     <style>
@@ -18,7 +18,7 @@ st.markdown("""
         }
         /* 사이드바 제목 크기 키우기 */
         .stSidebar h1, .stSidebar h2, .stSidebar h3 {
-            font-size: 1.6rem !important;
+            font-size: 2.0rem !important;
         }
         
         /* (2) 모바일 전용: 좌측 상단 사이드바 열기 버튼( > 모양 ) 눈에 확 띄게 만들기 */
@@ -75,10 +75,10 @@ if menu in ["🐛 살충제 검색", "🍄 살균제 검색"]:
         <p style='color: #2C3E50; font-size: 1.1em;'>여러 가지 농약을 한 탱크에 섞을 때는 <b>'물에 잘 안 녹는 제형'</b>부터 순서대로 넣어야 약이 엉기거나 떡이 지지 않습니다!</p>
         <div style='background-color: white; padding: 15px; border-radius: 8px; border: 1px solid #D5F5E3; margin-top: 15px;'>
             <ol style='font-size: 1.2em; line-height: 2.0; color: #239B56; font-weight: bold; margin-bottom: 0;'>
-                <li style='color: #2C3E50;'>💧 <span style='color: #117A65;'>[물 채우기]</span></li>
-                <li style='color: #2C3E50;'>📦 <span style='color: #239B56;'>수화제 / 입상수화제</span></li>
-                <li style='color: #2C3E50;'>🥛 <span style='color: #239B56;'>액상수화제</span></li>
-                <li style='color: #2C3E50;'>🧪 <span style='color: #239B56;'>액제 / 수용제</span></li>
+                <li style='color: #2C3E50;'>💧 <span style='color: #117A65;'>[물 채우기]</span> 살포용 탱크에 물을 반 이상(50~70%) 먼저 채웁니다.</li>
+                <li style='color: #2C3E50;'>📦 <span style='color: #239B56;'>수화제 / 입상수화제</span> <span style='font-weight: normal; color: #5D6D7E; font-size: 0.9em;'>(가루나 알갱이 약을 먼저 녹입니다)</span></li>
+                <li style='color: #2C3E50;'>🥛 <span style='color: #239B56;'>액상수화제</span> <span style='font-weight: normal; color: #5D6D7E; font-size: 0.9em;'>(걸쭉한 액체 약을 넣고 잘 저어줍니다)</span></li>
+                <li style='color: #2C3E50;'>🧪 <span style='color: #239B56;'>액제 / 수용제</span> <span style='font-weight: normal; color: #5D6D7E; font-size: 0.9em;'>(맑은 액체 성분의 약을 투입합니다)</span></li>
                 <li style='color: #2C3E50;'>🛢️ <span style='color: #239B56;'>유제</span> <span style='font-weight: normal; color: #C0392B; font-size: 0.9em; font-weight: bold;'>반드시 가장 나중에!</span></li>
                 <li style='color: #2C3E50;'>🌿 <span style='color: #2E4053;'>[맨 마지막]</span> 전착제 및 4종 복합 영양제 추가</li>
             </ol>
@@ -90,6 +90,9 @@ if menu in ["🐛 살충제 검색", "🍄 살균제 검색"]:
     """, unsafe_allow_html=True)
 
 
+# ==========================================
+# 📢 [1. 법인 공지사항 메인 화면]
+# ==========================================
 if menu == "📢 법인 공지사항":
     st.title("📢 아우내영농조합법인 공지사항")
     st.markdown("조합원 여러분을 위한 법인의 주요 일정 및 안내문입니다.")
@@ -106,21 +109,33 @@ if menu == "📢 법인 공지사항":
         d_day_text1 = "D-Day (오늘)"
     else:
         d_day_text1 = f"D+{abs(diff1)} (종료)"
-
+        
+    st.markdown(f"""
+    <div style='background-color: #F7F9F9; padding: 22px; border-radius: 12px; border-left: 6px solid #2980B9; margin-bottom: 20px; position: relative;'>
+        <span style='background-color: #2980B9; color: white; padding: 5px 12px; border-radius: 20px; font-weight: bold; float: right; font-size: 1.1em;'>{d_day_text1}</span>
+        <h3 style='margin-top: 0; color: #2C3E50;'>📌 2026년 제1기 부가가치세 확정신고 및 정산 서류 제출 안내</h3>
+        <p style='color: #7F8C8D; font-size: 0.95em; margin-bottom: 15px;'>📅 목표 기한일: 2026년 07월 25일</p>
+        <p style='color: #34495E; font-size: 1.1em; line-height: 1.6;'>
+            조합원 여러분께서는 기한 내에 관련 <b>세금계산서 및 영수증 원본</b>을 법인 사무실로 제출해 주시기 바랍니다. 기한이 지나면 정산 처리가 어려울 수 있으니 일정을 꼭 준수해 주세요.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
 
     st.markdown("""
     <div style='background-color: #F7F9F9; padding: 22px; border-radius: 12px; border-left: 6px solid #7F8C8D; margin-bottom: 20px;'>
-        <h3 style='margin-top: 0; color: #2C3E50;'>🚀 아우내영농조합법인 농약 검색기 시범 운영</h3>
+        <h3 style='margin-top: 0; color: #2C3E50;'>🚀 농약 혼용 검색 시스템 시범 운영 및 오픈</h3>
         <p style='color: #7F8C8D; font-size: 0.95em; margin-bottom: 15px;'>📅 등록일: 2026년 06월 17일</p>
         <p style='color: #34495E; font-size: 1.1em; line-height: 1.6;'>
-            조합원분들의 편리하고 과학적인 영농 활동을 지원하기 위해 법인 자체 <b>'농약 검색 시스템'</b>을 구축하였습니다. <br>
-            현재 살충제(90%) 및 살균제(70%) 데이터가 등록되어 있으며, 이용 중 추가를 원하시는 농약이나 불편한 점이 있다면 언제든 좌측 메뉴의 <b>'💬 건의사항 및 피드백'</b> 방에 남겨주세요!
+            조합원분들의 안전하고 과학적인 영농 활동을 지원하기 위해 법인 자체 <b>'농약 혼용 가부 검색 시스템'</b>을 구축하였습니다. <br>
+            현재 살충제 및 살균제 데이터가 등록되어 있으며, 이용 중 추가를 원하시는 농약이나 불편한 점이 있다면 언제든 좌측 메뉴의 <b>'💬 건의사항 및 피드백'</b> 방에 남겨주세요!
         </p>
     </div>
     """, unsafe_allow_html=True)
 
 
-
+# ==========================================
+# 🐛 [2. 살충제 검색 화면]
+# ==========================================
 elif menu == "🐛 살충제 검색":
     st.title("🐛 살충제 검색 시스템")
     st.markdown("**처방과 혼용 가부를 한눈에!** 검색 조건을 입력하세요.")
@@ -219,7 +234,9 @@ elif menu == "🐛 살충제 검색":
                     st.markdown(f"{base_info['작용원리']}")
                 st.markdown("---")
 
-
+# ==========================================
+# 🍄 [3. 살균제 검색 화면]
+# ==========================================
 elif menu == "🍄 살균제 검색":
     st.title("🍄 살균제 검색 시스템")
     st.markdown("**처방과 혼용 가부를 한눈에!** 검색 조건을 입력하세요.")
@@ -242,13 +259,13 @@ elif menu == "🍄 살균제 검색":
     with col_btn2:
         st.button("🔄 살균제 검색 초기화", on_click=clear_fungi_search, use_container_width=True)
 
-   col_search1, col_search2, col_search3 = st.columns(3)
-   with col_search1:
-      search_keyword_f = st.text_input("💊 검색할 '약 이름' (일부만 쳐도 됩니다)", "", key='fungi_drug')
-   with col_search2:
-      disease_keyword = st.text_input("🦠 방제할 '병명(적용대상)'", "", key='fungi_disease')
-   with col_search3:
-      ingredient_keyword_f = st.text_input("🧪 '성분/계통/기작' 입력", "", key='fungi_ing')
+    col_search1, col_search2, col_search3 = st.columns(3)
+    with col_search1:
+        search_keyword_f = st.text_input("💊 검색할 '약 이름' (일부만 쳐도 됩니다)", "", key='fungi_drug')
+    with col_search2:
+        disease_keyword = st.text_input("🦠 방제할 '병명(적용대상)'", "", key='fungi_disease')
+    with col_search3:
+        ingredient_keyword_f = st.text_input("🧪 '성분/계통/기작' 입력", "", key='fungi_ing')
 
     if search_keyword_f or disease_keyword or ingredient_keyword_f:
         filtered_df_f = df_fungi.copy()
@@ -306,7 +323,9 @@ elif menu == "🍄 살균제 검색":
                     st.markdown(f"**· 🚨 혼용 불가/주의:** <span style='color:red'>{base_info_f.get('혼용불가(주의)약제', '정보 없음')}</span>", unsafe_allow_html=True)
                     st.markdown("---")
 
-
+# ==========================================
+# 💬 [4. 건의사항 및 피드백 화면]
+# ==========================================
 elif menu == "💬 건의사항 및 피드백":
     st.title("💬 아우내영농조합법인 건의사항")
     st.markdown("법인에 대해서 or 사이트 사용에 대해서 건의사항을 자유롭게 남겨주세요!")
@@ -314,7 +333,7 @@ elif menu == "💬 건의사항 및 피드백":
     st.markdown("---")
 
     with st.form("feedback_form"):
-        user_name = st.text_input("👤 성함")
+        user_name = st.text_input("👤 성함 또는 별명")
         user_feedback = st.text_area("✍️ 건의 내용을 상세히 적어주세요.", height=150)
         
         submitted = st.form_submit_button("🚀 의견 등록하기")
@@ -323,15 +342,13 @@ elif menu == "💬 건의사항 및 피드백":
             if user_feedback.strip() == "":
                 st.warning("건의 내용을 입력해 주세요!")
             else:
-                # 💡 [방어막 2] 30초 도배 방지 타임락 (세션 상태 활용)
                 now = datetime.now()
                 if 'last_submit' in st.session_state:
                     time_diff = (now - st.session_state.last_submit).total_seconds()
                     if time_diff < 30:
-                        # 30초가 안 지났으면 남은 시간을 계산해서 에러창을 띄우고 아래 코드를 실행하지 않습니다.
                         left_time = int(30 - time_diff)
                         st.error(f"⏳ 도배 방지를 위해 {left_time}초 후에 다시 등록할 수 있습니다.")
-                        st.stop() # 여기서 코드 실행을 멈춤!
+                        st.stop()
 
                 try:
                     credentials_dict = json.loads(st.secrets["gcp_service_account"])
@@ -346,19 +363,16 @@ elif menu == "💬 건의사항 및 피드백":
                     client = gspread.authorize(creds)
                     sheet = client.open("아우내 건의사항").sheet1 
                     
-                    # (지난번 수정했던 KST 9시간 더하기 유지)
                     current_time = (datetime.now() + timedelta(hours=9)).strftime("%Y-%m-%d %H:%M:%S")
                     
                     sheet.insert_row([current_time, user_name, user_feedback], 2, value_input_option='USER_ENTERED')
                     
                     st.success("소중한 의견이 성공적으로 등록되었습니다! 감사합니다.")
-                    # 💡 성공적으로 보냈다면, 방금 보낸 시간을 기록해둡니다.
                     st.session_state.last_submit = now
                     
                 except Exception as e:
                     if "200" in str(e):
                         st.success("소중한 의견이 성공적으로 등록되었습니다! 감사합니다.")
-                        # 200 성공 버그일 때도 시간은 기록해줍니다.
                         st.session_state.last_submit = now
                     else:
                         st.error(f"진짜 오류가 발생했습니다: {e}")
