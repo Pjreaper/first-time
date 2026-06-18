@@ -66,19 +66,32 @@ st.sidebar.markdown("---")
 # ====================================================================
 components.html("""
     <script>
+        // 전체 화면(부모 창)을 봅니다.
         const doc = window.parent.document;
-        const radios = doc.querySelectorAll('input[type="radio"]');
         
-        radios.forEach(radio => {
-            radio.addEventListener('click', () => {
-                if (window.innerWidth <= 768) {
-                    const closeBtn = doc.querySelector('[data-testid="collapsedControl"]');
-                    if (closeBtn) {
-                        closeBtn.click();
-                    }
+        function setSidebarAutoClose() {
+            // 라디오 버튼(메뉴)들을 찾습니다.
+            const radios = doc.querySelectorAll('input[type="radio"]');
+            
+            radios.forEach(radio => {
+                // 이미 투명 인간이 붙어있는지 확인 (중복 방지)
+                if (!radio.hasAttribute('data-click-bound')) {
+                    radio.setAttribute('data-click-bound', 'true'); // 도장 쾅!
+                    
+                    radio.addEventListener('click', () => {
+                        // 📱 복잡한 화면 너비 계산 없이, 화면에 '닫기 버튼( > )'이 보이면 무조건 누릅니다!
+                        const closeBtn = doc.querySelector('[data-testid="collapsedControl"]');
+                        if (closeBtn) {
+                            // 메뉴가 넘어가는 시간(0.1초)을 아주 살짝 기다렸다가 닫아줍니다.
+                            setTimeout(() => closeBtn.click(), 100);
+                        }
+                    });
                 }
             });
-        });
+        }
+        
+        // 스트림릿이 화면을 새로고침해도, 0.5초마다 투명 인간을 다시 투입시킵니다!
+        setInterval(setSidebarAutoClose, 500);
     </script>
 """, height=0, width=0)
 # ====================================================================
