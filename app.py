@@ -137,6 +137,7 @@ elif menu == "🐛 살충제 검색":
         all_pests.extend(split_pests)
     pest_list = sorted(list(set([p for p in all_pests if p])))
 
+    # 💡 [초기화 로직 업데이트] 전체 목록 드롭다운도 같이 초기화됩니다.
     def clear_insect_search():
         st.session_state.insect_select = "(선택 안함)"
         st.session_state.insect_drug = ""
@@ -147,6 +148,7 @@ elif menu == "🐛 살충제 검색":
     with col_btn2:
         st.button("🔄 검색 초기화", on_click=clear_insect_search, use_container_width=True)
 
+    # 💡 [기능 1] 전체 목록에서 고르기 (클릭 즉시 자동 검색)
     selected_drug = st.selectbox("📖 전체 농약 목록에서 찾아보기 (누르면 바로 검색됩니다)", options=["(선택 안함)"] + drug_list, key='insect_select')
 
     st.markdown("👇 **또는 약 이름의 일부나 해충 이름으로 검색하기**")
@@ -159,11 +161,14 @@ elif menu == "🐛 살충제 검색":
     with col_search3:
         ingredient_keyword = st.text_input("🧪 '성분/계통/기작' 입력", "", key='insect_ing')
 
+    # 💡 [기능 2] 스마트폰 유저를 위한 아주 큼직한 '검색' 버튼 (파란/빨간색 강조)
     search_button = st.button("🔍 위 조건으로 검색하기 (스마트폰은 터치!)", type="primary", use_container_width=True)
 
+    # 💡 검색 실행 조건: 버튼을 눌렀거나, 목록을 선택했거나, 텍스트가 입력되었을 때
     if search_button or search_keyword or pest_keyword or ingredient_keyword or selected_drug != "(선택 안함)":
         filtered_df = df_insect.copy()
         
+        # 목록에서 특정 약을 선택했다면 그걸 최우선으로 검색!
         if selected_drug != "(선택 안함)":
             filtered_df = filtered_df[filtered_df['약명'] == selected_drug]
         else:
@@ -257,6 +262,7 @@ elif menu == "🍄 살균제 검색":
     with col_btn2:
         st.button("🔄 검색 초기화", on_click=clear_fungi_search, use_container_width=True)
 
+    # 💡 [기능 1] 살균제 전체 목록 드롭다운
     selected_drug_f = st.selectbox("📖 전체 농약 목록에서 찾아보기 (누르면 바로 검색됩니다)", options=["(선택 안함)"] + drug_list_fungi, key='fungi_select')
 
     st.markdown("👇 **또는 약 이름의 일부나 병명으로 검색하기**")
@@ -268,10 +274,11 @@ elif menu == "🍄 살균제 검색":
     with col_search3:
         ingredient_keyword_f = st.text_input("🧪 '성분/계통/기작' 입력", "", key='fungi_ing')
 
+    # 💡 [기능 2] 살균제 검색 버튼 추가
     search_button_f = st.button("🔍 위 조건으로 검색하기 (스마트폰은 터치!)", type="primary", use_container_width=True)
 
-        if search_button_f or search_keyword_f or disease_keyword_f or ingredient_keyword_f or selected_drug_f != "(선택 안함)":
-            filtered_df_f = df_fungi.copy()
+    if search_button_f or search_keyword_f or disease_keyword_f or ingredient_keyword_f or selected_drug_f != "(선택 안함)":
+        filtered_df_f = df_fungi.copy()
         
         if selected_drug_f != "(선택 안함)":
             filtered_df_f = filtered_df_f[filtered_df_f['약명'] == selected_drug_f]
