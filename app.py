@@ -9,7 +9,7 @@ st.set_page_config(page_title="아우내 영농조합법인 농약 검색기", p
 
 st.markdown("""
     <style>
-        /* (1) 사이드바 라디오 버튼 글씨 크기 대폭 키우기 */
+        /* 사이드바 라디오 버튼 글씨 크기 대폭 키우기 */
         .stSidebar .stRadio p {
             font-size: 1.4rem !important;
             font-weight: bold !important;
@@ -21,14 +21,14 @@ st.markdown("""
             font-size: 2.0rem !important;
         }
         
-        /* (2) 모바일 전용: 좌측 상단 사이드바 열기 버튼( > 모양 ) 눈에 확 띄게 만들기 */
+        /* 모바일 전용: 좌측 상단 사이드바 열기 버튼( > 모양 ) 눈에 확 띄게 만들기 */
         button[data-testid="collapsedControl"] {
             background-color: #1E8449 !important; /* 시그니처 초록색 */
             color: white !important;
             border-radius: 8px !important;
-            transform: scale(1.4) !important; /* 버튼 크기 1.4배 확대 */
+            transform: scale(1.4) !important; 
             margin: 15px !important;
-            box-shadow: 0px 4px 10px rgba(0,0,0,0.3) !important; /* 그림자 효과 */
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.3) !important;
         }
     </style>
 """, unsafe_allow_html=True)
@@ -110,7 +110,6 @@ if menu == "📢 법인 공지사항":
     else:
         d_day_text1 = f"D+{abs(diff1)} (종료)"
         
-
     st.markdown("""
     <div style='background-color: #F7F9F9; padding: 22px; border-radius: 12px; border-left: 6px solid #7F8C8D; margin-bottom: 20px;'>
         <h3 style='margin-top: 0; color: #2C3E50;'>🚀 농약 혼용 검색 시스템 시범 운영 및 오픈</h3>
@@ -129,7 +128,6 @@ if menu == "📢 법인 공지사항":
 elif menu == "🐛 살충제 검색":
     st.title("🐛 살충제 검색 시스템")
     st.markdown("**처방과 혼용 가부를 한눈에!** 검색 조건을 입력하세요.")
-    st.markdown("**아직 부족한 점이 많습니다. 많은 피드백 부탁드립니다.**")
     st.markdown("---")
 
     drug_list = sorted([str(x) for x in df_insect['약명'].unique() if str(x).strip() != ""])
@@ -139,41 +137,56 @@ elif menu == "🐛 살충제 검색":
         all_pests.extend(split_pests)
     pest_list = sorted(list(set([p for p in all_pests if p])))
 
+    # 💡 [초기화 로직 업데이트] 전체 목록 드롭다운도 같이 초기화됩니다.
     def clear_insect_search():
+        st.session_state.insect_select = "(선택 안함)"
         st.session_state.insect_drug = ""
         st.session_state.insect_pest = ""
         st.session_state.insect_ing = ""
 
     col_btn1, col_btn2 = st.columns([8, 2])
     with col_btn2:
-        st.button("🔄 살충제 검색 초기화", on_click=clear_insect_search, use_container_width=True)
+        st.button("🔄 검색 초기화", on_click=clear_insect_search, use_container_width=True)
 
+    # 💡 [기능 1] 전체 목록에서 고르기 (클릭 즉시 자동 검색)
+    selected_drug = st.selectbox("📖 전체 농약 목록에서 찾아보기 (누르면 바로 검색됩니다)", options=["(선택 안함)"] + drug_list, key='insect_select')
+
+    st.markdown("👇 **또는 약 이름의 일부나 해충 이름으로 검색하기**")
+    
     col_search1, col_search2, col_search3 = st.columns(3)
     with col_search1:
-        search_keyword = st.text_input("💊 검색할 '약 이름' (일부만 쳐도 됩니다)", "", key='insect_drug')
+        search_keyword = st.text_input("💊 '약 이름' 일부 입력", "", key='insect_drug')
     with col_search2:
         pest_keyword = st.text_input("🐛 방제할 '해충' (예: 진딧물)", "", key='insect_pest')
     with col_search3:
-        ingredient_keyword = st.text_input("🧪 '성분/계통/기작' 입력 (예: 28)", "", key='insect_ing')
+        ingredient_keyword = st.text_input("🧪 '성분/계통/기작' 입력", "", key='insect_ing')
 
-    if search_keyword or pest_keyword or ingredient_keyword:
+    # 💡 [기능 2] 스마트폰 유저를 위한 아주 큼직한 '검색' 버튼 (파란/빨간색 강조)
+    search_button = st.button("🔍 위 조건으로 검색하기 (스마트폰은 터치!)", type="primary", use_container_width=True)
+
+    # 💡 검색 실행 조건: 버튼을 눌렀거나, 목록을 선택했거나, 텍스트가 입력되었을 때
+    if search_button or search_keyword or pest_keyword or ingredient_keyword or selected_drug != "(선택 안함)":
         filtered_df = df_insect.copy()
         
-        if search_keyword:
-            filtered_df = filtered_df[filtered_df['약명'].astype(str).str.contains(search_keyword, case=False, na=False, regex=False)]
-        if pest_keyword:
-            filtered_df = filtered_df[filtered_df['병명'].astype(str).str.contains(pest_keyword, case=False, na=False, regex=False)]
-        if ingredient_keyword:
-            mask = (
-                filtered_df['성분1(한글)'].astype(str).str.contains(ingredient_keyword, case=False, na=False, regex=False) |
-                filtered_df['성분2(한글)'].astype(str).str.contains(ingredient_keyword, case=False, na=False, regex=False) |
-                filtered_df['성분1계통'].astype(str).str.contains(ingredient_keyword, case=False, na=False, regex=False) |
-                filtered_df['성분2계통'].astype(str).str.contains(ingredient_keyword, case=False, na=False, regex=False) |
-                filtered_df['작용기작'].astype(str).str.contains(ingredient_keyword, case=False, na=False, regex=False) |
-                filtered_df['성분1작용기작'].astype(str).str.contains(ingredient_keyword, case=False, na=False, regex=False) |
-                filtered_df['성분2작용기작'].astype(str).str.contains(ingredient_keyword, case=False, na=False, regex=False)
-            )
-            filtered_df = filtered_df[mask]
+        # 목록에서 특정 약을 선택했다면 그걸 최우선으로 검색!
+        if selected_drug != "(선택 안함)":
+            filtered_df = filtered_df[filtered_df['약명'] == selected_drug]
+        else:
+            if search_keyword:
+                filtered_df = filtered_df[filtered_df['약명'].astype(str).str.contains(search_keyword, case=False, na=False, regex=False)]
+            if pest_keyword:
+                filtered_df = filtered_df[filtered_df['병명'].astype(str).str.contains(pest_keyword, case=False, na=False, regex=False)]
+            if ingredient_keyword:
+                mask = (
+                    filtered_df['성분1(한글)'].astype(str).str.contains(ingredient_keyword, case=False, na=False, regex=False) |
+                    filtered_df['성분2(한글)'].astype(str).str.contains(ingredient_keyword, case=False, na=False, regex=False) |
+                    filtered_df['성분1계통'].astype(str).str.contains(ingredient_keyword, case=False, na=False, regex=False) |
+                    filtered_df['성분2계통'].astype(str).str.contains(ingredient_keyword, case=False, na=False, regex=False) |
+                    filtered_df['작용기작'].astype(str).str.contains(ingredient_keyword, case=False, na=False, regex=False) |
+                    filtered_df['성분1작용기작'].astype(str).str.contains(ingredient_keyword, case=False, na=False, regex=False) |
+                    filtered_df['성분2작용기작'].astype(str).str.contains(ingredient_keyword, case=False, na=False, regex=False)
+                )
+                filtered_df = filtered_df[mask]
 
         if filtered_df.empty:
             st.warning("검색 조건에 맞는 약제가 없습니다. 이름을 다시 확인해주세요.")
@@ -230,7 +243,6 @@ elif menu == "🐛 살충제 검색":
 elif menu == "🍄 살균제 검색":
     st.title("🍄 살균제 검색 시스템")
     st.markdown("**처방과 혼용 가부를 한눈에!** 검색 조건을 입력하세요.")
-    st.markdown("**아직 부족한 점이 많습니다. 많은 피드백 부탁드립니다.**")
     st.markdown("---")
 
     drug_list_fungi = sorted([str(x) for x in df_fungi['약명'].unique() if str(x).strip() != ""])
@@ -241,36 +253,47 @@ elif menu == "🍄 살균제 검색":
     disease_list = sorted(list(set([d for d in all_diseases if d])))
 
     def clear_fungi_search():
+        st.session_state.fungi_select = "(선택 안함)"
         st.session_state.fungi_drug = ""
         st.session_state.fungi_disease = ""
         st.session_state.fungi_ing = ""
 
     col_btn1, col_btn2 = st.columns([8, 2])
     with col_btn2:
-        st.button("🔄 살균제 검색 초기화", on_click=clear_fungi_search, use_container_width=True)
+        st.button("🔄 검색 초기화", on_click=clear_fungi_search, use_container_width=True)
 
+    # 💡 [기능 1] 살균제 전체 목록 드롭다운
+    selected_drug_f = st.selectbox("📖 전체 농약 목록에서 찾아보기 (누르면 바로 검색됩니다)", options=["(선택 안함)"] + drug_list_fungi, key='fungi_select')
+
+    st.markdown("👇 **또는 약 이름의 일부나 병명으로 검색하기**")
     col_search1, col_search2, col_search3 = st.columns(3)
     with col_search1:
-        search_keyword_f = st.text_input("💊 검색할 '약 이름' (일부만 쳐도 됩니다)", "", key='fungi_drug')
+        search_keyword_f = st.text_input("💊 '약 이름' 일부 입력", "", key='fungi_drug')
     with col_search2:
         disease_keyword = st.text_input("🦠 방제할 '병명(적용대상)'", "", key='fungi_disease')
     with col_search3:
         ingredient_keyword_f = st.text_input("🧪 '성분/계통/기작' 입력", "", key='fungi_ing')
 
-    if search_keyword_f or disease_keyword or ingredient_keyword_f:
+    # 💡 [기능 2] 살균제 검색 버튼 추가
+    search_button_f = st.button("🔍 위 조건으로 검색하기 (스마트폰은 터치!)", type="primary", use_container_width=True)
+
+    if search_button_f or search_keyword_f or disease_keyword_f or ingredient_keyword_f or selected_drug_f != "(선택 안함)":
         filtered_df_f = df_fungi.copy()
         
-        if search_keyword_f:
-            filtered_df_f = filtered_df_f[filtered_df_f['약명'].astype(str).str.contains(search_keyword_f, case=False, na=False, regex=False)]
-        if disease_keyword:
-            filtered_df_f = filtered_df_f[filtered_df_f['병명'].astype(str).str.contains(disease_keyword, case=False, na=False, regex=False)]
-        if ingredient_keyword_f:
-            mask_f = (
-                filtered_df_f['성분1(한글)'].astype(str).str.contains(ingredient_keyword_f, case=False, na=False, regex=False) |
-                filtered_df_f['성분1계통'].astype(str).str.contains(ingredient_keyword_f, case=False, na=False, regex=False) |
-                filtered_df_f['작용기작'].astype(str).str.contains(ingredient_keyword_f, case=False, na=False, regex=False)
-            )
-            filtered_df_f = filtered_df_f[mask_f]
+        if selected_drug_f != "(선택 안함)":
+            filtered_df_f = filtered_df_f[filtered_df_f['약명'] == selected_drug_f]
+        else:
+            if search_keyword_f:
+                filtered_df_f = filtered_df_f[filtered_df_f['약명'].astype(str).str.contains(search_keyword_f, case=False, na=False, regex=False)]
+            if disease_keyword:
+                filtered_df_f = filtered_df_f[filtered_df_f['병명'].astype(str).str.contains(disease_keyword, case=False, na=False, regex=False)]
+            if ingredient_keyword_f:
+                mask_f = (
+                    filtered_df_f['성분1(한글)'].astype(str).str.contains(ingredient_keyword_f, case=False, na=False, regex=False) |
+                    filtered_df_f['성분1계통'].astype(str).str.contains(ingredient_keyword_f, case=False, na=False, regex=False) |
+                    filtered_df_f['작용기작'].astype(str).str.contains(ingredient_keyword_f, case=False, na=False, regex=False)
+                )
+                filtered_df_f = filtered_df_f[mask_f]
 
         if filtered_df_f.empty:
             st.warning("검색 조건에 맞는 약제가 없습니다.")
