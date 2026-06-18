@@ -110,16 +110,6 @@ if menu == "📢 법인 공지사항":
     else:
         d_day_text1 = f"D+{abs(diff1)} (종료)"
         
-    st.markdown(f"""
-    <div style='background-color: #F7F9F9; padding: 22px; border-radius: 12px; border-left: 6px solid #2980B9; margin-bottom: 20px; position: relative;'>
-        <span style='background-color: #2980B9; color: white; padding: 5px 12px; border-radius: 20px; font-weight: bold; float: right; font-size: 1.1em;'>{d_day_text1}</span>
-        <h3 style='margin-top: 0; color: #2C3E50;'>📌 2026년 제1기 부가가치세 확정신고 및 정산 서류 제출 안내</h3>
-        <p style='color: #7F8C8D; font-size: 0.95em; margin-bottom: 15px;'>📅 목표 기한일: 2026년 07월 25일</p>
-        <p style='color: #34495E; font-size: 1.1em; line-height: 1.6;'>
-            조합원 여러분께서는 기한 내에 관련 <b>세금계산서 및 영수증 원본</b>을 법인 사무실로 제출해 주시기 바랍니다. 기한이 지나면 정산 처리가 어려울 수 있으니 일정을 꼭 준수해 주세요.
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
 
     st.markdown("""
     <div style='background-color: #F7F9F9; padding: 22px; border-radius: 12px; border-left: 6px solid #7F8C8D; margin-bottom: 20px;'>
