@@ -243,12 +243,12 @@ elif menu == "🍄 살균제 검색":
         st.button("🔄 살균제 검색 초기화", on_click=clear_fungi_search, use_container_width=True)
 
    col_search1, col_search2, col_search3 = st.columns(3)
-    with col_search1:
-        search_keyword_f = st.text_input("💊 검색할 '약 이름' (일부만 쳐도 됩니다)", "", key='fungi_drug')
-    with col_search2:
-        disease_keyword = st.text_input("🦠 방제할 '병명(적용대상)'", "", key='fungi_disease')
-    with col_search3:
-        ingredient_keyword_f = st.text_input("🧪 '성분/계통/기작' 입력", "", key='fungi_ing')
+   with col_search1:
+      search_keyword_f = st.text_input("💊 검색할 '약 이름' (일부만 쳐도 됩니다)", "", key='fungi_drug')
+   with col_search2:
+      disease_keyword = st.text_input("🦠 방제할 '병명(적용대상)'", "", key='fungi_disease')
+   with col_search3:
+      ingredient_keyword_f = st.text_input("🧪 '성분/계통/기작' 입력", "", key='fungi_ing')
 
     if search_keyword_f or disease_keyword or ingredient_keyword_f:
         filtered_df_f = df_fungi.copy()
