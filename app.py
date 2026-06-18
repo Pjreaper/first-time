@@ -270,8 +270,8 @@ elif menu == "🍄 살균제 검색":
 
     search_button_f = st.button("🔍 위 조건으로 검색하기 (스마트폰은 터치!)", type="primary", use_container_width=True)
 
-     if search_button_f or search_keyword_f or disease_keyword_f or ingredient_keyword_f or selected_drug_f != "(선택 안함)":
-        filtered_df_f = df_fungi.copy()
+        if search_button_f or search_keyword_f or disease_keyword_f or ingredient_keyword_f or selected_drug_f != "(선택 안함)":
+            filtered_df_f = df_fungi.copy()
         
         if selected_drug_f != "(선택 안함)":
             filtered_df_f = filtered_df_f[filtered_df_f['약명'] == selected_drug_f]
