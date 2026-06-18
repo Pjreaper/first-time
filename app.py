@@ -75,10 +75,10 @@ if menu in ["🐛 살충제 검색", "🍄 살균제 검색"]:
         <p style='color: #2C3E50; font-size: 1.1em;'>여러 가지 농약을 한 탱크에 섞을 때는 <b>'물에 잘 안 녹는 제형'</b>부터 순서대로 넣어야 약이 엉기거나 떡이 지지 않습니다!</p>
         <div style='background-color: white; padding: 15px; border-radius: 8px; border: 1px solid #D5F5E3; margin-top: 15px;'>
             <ol style='font-size: 1.2em; line-height: 2.0; color: #239B56; font-weight: bold; margin-bottom: 0;'>
-                <li style='color: #2C3E50;'>💧 <span style='color: #117A65;'>[물 채우기]</span> 살포용 탱크에 물을 반 이상(50~70%) 먼저 채웁니다.</li>
-                <li style='color: #2C3E50;'>📦 <span style='color: #239B56;'>수화제 / 입상수화제</span> <span style='font-weight: normal; color: #5D6D7E; font-size: 0.9em;'>(가루나 알갱이 약을 먼저 녹입니다)</span></li>
-                <li style='color: #2C3E50;'>🥛 <span style='color: #239B56;'>액상수화제</span> <span style='font-weight: normal; color: #5D6D7E; font-size: 0.9em;'>(걸쭉한 액체 약을 넣고 잘 저어줍니다)</span></li>
-                <li style='color: #2C3E50;'>🧪 <span style='color: #239B56;'>액제 / 수용제</span> <span style='font-weight: normal; color: #5D6D7E; font-size: 0.9em;'>(맑은 액체 성분의 약을 투입합니다)</span></li>
+                <li style='color: #2C3E50;'>💧 <span style='color: #117A65;'>[물 채우기]</span> </li>
+                <li style='color: #2C3E50;'>📦 <span style='color: #239B56;'>수화제 / 입상수화제</span></li>
+                <li style='color: #2C3E50;'>🥛 <span style='color: #239B56;'>액상수화제</span></li>
+                <li style='color: #2C3E50;'>🧪 <span style='color: #239B56;'>액제 / 수용제</span></li>
                 <li style='color: #2C3E50;'>🛢️ <span style='color: #239B56;'>유제</span> <span style='font-weight: normal; color: #C0392B; font-size: 0.9em; font-weight: bold;'>반드시 가장 나중에!</span></li>
                 <li style='color: #2C3E50;'>🌿 <span style='color: #2E4053;'>[맨 마지막]</span> 전착제 및 4종 복합 영양제 추가</li>
             </ol>
@@ -116,8 +116,8 @@ if menu == "📢 법인 공지사항":
         <h3 style='margin-top: 0; color: #2C3E50;'>🚀 농약 혼용 검색 시스템 시범 운영 및 오픈</h3>
         <p style='color: #7F8C8D; font-size: 0.95em; margin-bottom: 15px;'>📅 등록일: 2026년 06월 17일</p>
         <p style='color: #34495E; font-size: 1.1em; line-height: 1.6;'>
-            조합원분들의 안전하고 과학적인 영농 활동을 지원하기 위해 법인 자체 <b>'농약 혼용 가부 검색 시스템'</b>을 구축하였습니다. <br>
-            현재 살충제 및 살균제 데이터가 등록되어 있으며, 이용 중 추가를 원하시는 농약이나 불편한 점이 있다면 언제든 좌측 메뉴의 <b>'💬 건의사항 및 피드백'</b> 방에 남겨주세요!
+            조합원분들의 효율적이고 과학적인 영농 활동을 지원하기 위해 법인 자체 <b>'농약 검색 시스템'</b>을 구축하였습니다. <br>
+            현재 살충제(90%) 및 살균제(70%) 데이터가 등록되어 있으며, 이용 중 추가를 원하시는 농약이나 불편한 점이 있다면 언제든 좌측 메뉴의 <b>'💬 건의사항 및 피드백'</b> 방에 남겨주세요!
         </p>
     </div>
     """, unsafe_allow_html=True)
@@ -323,7 +323,7 @@ elif menu == "💬 건의사항 및 피드백":
     st.markdown("---")
 
     with st.form("feedback_form"):
-        user_name = st.text_input("👤 성함 또는 별명")
+        user_name = st.text_input("👤 성함")
         user_feedback = st.text_area("✍️ 건의 내용을 상세히 적어주세요.", height=150)
         
         submitted = st.form_submit_button("🚀 의견 등록하기")
