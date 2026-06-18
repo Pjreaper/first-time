@@ -110,7 +110,7 @@ if menu == "📢 법인 공지사항":
 
     st.markdown("""
     <div style='background-color: #F7F9F9; padding: 22px; border-radius: 12px; border-left: 6px solid #7F8C8D; margin-bottom: 20px;'>
-        <h3 style='margin-top: 0; color: #2C3E50;'>🚀 아우내영농조합법인 농약 검색기 시범 운영 및 오픈</h3>
+        <h3 style='margin-top: 0; color: #2C3E50;'>🚀 아우내영농조합법인 농약 검색기 시범 운영</h3>
         <p style='color: #7F8C8D; font-size: 0.95em; margin-bottom: 15px;'>📅 등록일: 2026년 06월 17일</p>
         <p style='color: #34495E; font-size: 1.1em; line-height: 1.6;'>
             조합원분들의 편리하고 과학적인 영농 활동을 지원하기 위해 법인 자체 <b>'농약 검색 시스템'</b>을 구축하였습니다. <br>
