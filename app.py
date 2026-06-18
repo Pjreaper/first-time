@@ -145,9 +145,9 @@ elif menu == "🐛 살충제 검색":
 
     col_search1, col_search2, col_search3 = st.columns(3)
     with col_search1:
-        search_keyword = st.selectbox("💊 검색할 '약 이름' (예: 엑시렐)", options=[""] + drug_list, key='insect_drug')
+        search_keyword = st.text_input("💊 검색할 '약 이름' (일부만 쳐도 됩니다)", "", key='insect_drug')
     with col_search2:
-        pest_keyword = st.selectbox("🐛 방제할 '해충' (예: 진딧물)", options=[""] + pest_list, key='insect_pest')
+        pest_keyword = st.text_input("🐛 방제할 '해충' (예: 진딧물)", "", key='insect_pest')
     with col_search3:
         ingredient_keyword = st.text_input("🧪 '성분/계통/기작' 입력 (예: 28)", "", key='insect_ing')
 
@@ -242,12 +242,11 @@ elif menu == "🍄 살균제 검색":
     with col_btn2:
         st.button("🔄 살균제 검색 초기화", on_click=clear_fungi_search, use_container_width=True)
 
-    col_search1, col_search2, col_search3 = st.columns(3)
+   col_search1, col_search2, col_search3 = st.columns(3)
     with col_search1:
-        search_keyword_f = st.selectbox("💊 검색할 '약 이름'", options=[""] + drug_list_fungi, key='fungi_drug')
+        search_keyword_f = st.text_input("💊 검색할 '약 이름' (일부만 쳐도 됩니다)", "", key='fungi_drug')
     with col_search2:
-        disease_keyword = st.selectbox("🦠 방제할 '병명(적용대상)'", options=[""] + disease_list, key='fungi_disease')
-    with col_search3:
+        disease_keyword = st.text_input("🦠 방제할 '병명(적용대상)'", "", key='fungi_disease')
         ingredient_keyword_f = st.text_input("🧪 '성분/계통/기작' 입력", "", key='fungi_ing')
 
     if search_keyword_f or disease_keyword or ingredient_keyword_f:
