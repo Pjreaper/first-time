@@ -4,13 +4,13 @@ import gspread
 import json
 from google.oauth2.service_account import Credentials
 from datetime import datetime, timedelta
-import streamlit.components.v1 as components
+import streamlit.components.v1 as components  # 💡 모바일 사이드바 자동 닫기를 위한 투명 인간 도구 추가!
 
 st.set_page_config(page_title="아우내 영농조합법인 농약 검색기", page_icon="🌱", layout="wide")
 
 st.markdown("""
     <style>
-        /* 사이드바 라디오 버튼 글씨 크기 대폭 키우기 */
+        /* (1) 사이드바 라디오 버튼 글씨 크기 대폭 키우기 */
         .stSidebar .stRadio p {
             font-size: 1.4rem !important;
             font-weight: bold !important;
@@ -22,14 +22,14 @@ st.markdown("""
             font-size: 2.0rem !important;
         }
         
-        /* 모바일 전용: 좌측 상단 사이드바 열기 버튼( > 모양 ) 눈에 확 띄게 만들기 */
+        /* (2) 모바일 전용: 좌측 상단 사이드바 열기 버튼( > 모양 ) 눈에 확 띄게 만들기 */
         button[data-testid="collapsedControl"] {
             background-color: #1E8449 !important; /* 시그니처 초록색 */
             color: white !important;
             border-radius: 8px !important;
-            transform: scale(1.4) !important; 
+            transform: scale(1.4) !important; /* 버튼 크기 1.4배 확대 */
             margin: 15px !important;
-            box-shadow: 0px 4px 10px rgba(0,0,0,0.3) !important;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.3) !important; /* 그림자 효과 */
         }
     </style>
 """, unsafe_allow_html=True)
@@ -61,18 +61,17 @@ menu = st.sidebar.radio(
 )
 st.sidebar.markdown("---")
 
+# ====================================================================
+# 💡 [마법의 코드] 모바일에서 메뉴 선택 시 사이드바 자동 닫기
+# ====================================================================
 components.html("""
     <script>
-        // 전체 화면(부모 창)을 봅니다.
         const doc = window.parent.document;
-        // 동그란 라디오 버튼들을 모두 찾습니다.
         const radios = doc.querySelectorAll('input[type="radio"]');
         
         radios.forEach(radio => {
             radio.addEventListener('click', () => {
-                // 📱 스마트폰 환경(화면 너비 768px 이하)일 때만 작동하도록 설정!
                 if (window.innerWidth <= 768) {
-                    // 사이드바 닫기 버튼( > )을 찾아서 투명 인간이 클릭하게 만듭니다.
                     const closeBtn = doc.querySelector('[data-testid="collapsedControl"]');
                     if (closeBtn) {
                         closeBtn.click();
@@ -82,6 +81,7 @@ components.html("""
         });
     </script>
 """, height=0, width=0)
+# ====================================================================
 
 st.markdown("""
     <div style='background-color: #FEF9E7; padding: 15px; border-radius: 8px; border-left: 6px solid #F4D03F; margin-bottom: 20px;'>
@@ -98,7 +98,7 @@ if menu in ["🐛 살충제 검색", "🍄 살균제 검색"]:
         <p style='color: #2C3E50; font-size: 1.1em;'>여러 가지 농약을 한 탱크에 섞을 때는 <b>'물에 잘 안 녹는 제형'</b>부터 순서대로 넣어야 약이 엉기거나 떡이 지지 않습니다!</p>
         <div style='background-color: white; padding: 15px; border-radius: 8px; border: 1px solid #D5F5E3; margin-top: 15px;'>
             <ol style='font-size: 1.2em; line-height: 2.0; color: #239B56; font-weight: bold; margin-bottom: 0;'>
-                <li style='color: #2C3E50;'>💧 <span style='color: #117A65;'>[물 채우기]</span> </li>
+                <li style='color: #2C3E50;'>💧 <span style='color: #117A65;'>[물 채우기]</span></li>
                 <li style='color: #2C3E50;'>📦 <span style='color: #239B56;'>수화제 / 입상수화제</span></li>
                 <li style='color: #2C3E50;'>🥛 <span style='color: #239B56;'>액상수화제</span></li>
                 <li style='color: #2C3E50;'>🧪 <span style='color: #239B56;'>액제 / 수용제</span></li>
@@ -160,7 +160,6 @@ elif menu == "🐛 살충제 검색":
         all_pests.extend(split_pests)
     pest_list = sorted(list(set([p for p in all_pests if p])))
 
-    # 💡 [초기화 로직 업데이트] 전체 목록 드롭다운도 같이 초기화됩니다.
     def clear_insect_search():
         st.session_state.insect_select = "(선택 안함)"
         st.session_state.insect_drug = ""
@@ -171,7 +170,6 @@ elif menu == "🐛 살충제 검색":
     with col_btn2:
         st.button("🔄 검색 초기화", on_click=clear_insect_search, use_container_width=True)
 
-    # 💡 [기능 1] 전체 목록에서 고르기 (클릭 즉시 자동 검색)
     selected_drug = st.selectbox("📖 전체 농약 목록에서 찾아보기 (누르면 바로 검색됩니다)", options=["(선택 안함)"] + drug_list, key='insect_select')
 
     st.markdown("👇 **또는 약 이름의 일부나 해충 이름으로 검색하기**")
@@ -184,14 +182,11 @@ elif menu == "🐛 살충제 검색":
     with col_search3:
         ingredient_keyword = st.text_input("🧪 '성분/계통/기작' 입력", "", key='insect_ing')
 
-    # 💡 [기능 2] 스마트폰 유저를 위한 아주 큼직한 '검색' 버튼 (파란/빨간색 강조)
     search_button = st.button("🔍 위 조건으로 검색하기 (스마트폰은 터치!)", type="primary", use_container_width=True)
 
-    # 💡 검색 실행 조건: 버튼을 눌렀거나, 목록을 선택했거나, 텍스트가 입력되었을 때
     if search_button or search_keyword or pest_keyword or ingredient_keyword or selected_drug != "(선택 안함)":
         filtered_df = df_insect.copy()
         
-        # 목록에서 특정 약을 선택했다면 그걸 최우선으로 검색!
         if selected_drug != "(선택 안함)":
             filtered_df = filtered_df[filtered_df['약명'] == selected_drug]
         else:
@@ -285,7 +280,6 @@ elif menu == "🍄 살균제 검색":
     with col_btn2:
         st.button("🔄 검색 초기화", on_click=clear_fungi_search, use_container_width=True)
 
-    # 💡 [기능 1] 살균제 전체 목록 드롭다운
     selected_drug_f = st.selectbox("📖 전체 농약 목록에서 찾아보기 (누르면 바로 검색됩니다)", options=["(선택 안함)"] + drug_list_fungi, key='fungi_select')
 
     st.markdown("👇 **또는 약 이름의 일부나 병명으로 검색하기**")
@@ -297,10 +291,9 @@ elif menu == "🍄 살균제 검색":
     with col_search3:
         ingredient_keyword_f = st.text_input("🧪 '성분/계통/기작' 입력", "", key='fungi_ing')
 
-    # 💡 [기능 2] 살균제 검색 버튼 추가
     search_button_f = st.button("🔍 위 조건으로 검색하기 (스마트폰은 터치!)", type="primary", use_container_width=True)
 
-    if search_button_f or search_keyword_f or disease_keyword_f or ingredient_keyword_f or selected_drug_f != "(선택 안함)":
+    if search_button_f or search_keyword_f or disease_keyword or ingredient_keyword_f or selected_drug_f != "(선택 안함)":
         filtered_df_f = df_fungi.copy()
         
         if selected_drug_f != "(선택 안함)":
