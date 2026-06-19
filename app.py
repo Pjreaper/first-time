@@ -27,7 +27,7 @@ st.markdown("""
             background-color: #1E8449 !important; /* 시그니처 초록색 */
             color: white !important;
             border-radius: 8px !important;
-            transform: scale(1.4) !important; /* 버튼 크기 1.4배 확대 */
+            transform: scale(2.4) !important; /* 버튼 크기 1.4배 확대 */
             margin: 15px !important;
             box-shadow: 0px 4px 10px rgba(0,0,0,0.3) !important; /* 그림자 효과 */
         }
