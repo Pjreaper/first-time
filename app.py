@@ -167,6 +167,7 @@ if menu == "📢 법인 공지사항":
 elif menu == "🐛 살충제 검색":
     st.title("🐛 살충제 검색 시스템")
     st.markdown("**처방과 혼용 가부를 한눈에!** 검색 조건을 입력하세요.")
+    st.markdown("※ 혼용가부는 해당 유통사(제조사)에서 제공하는 내용을 기반으로 작성되었습니다.")
     st.markdown("---")
 
     drug_list = sorted([str(x) for x in df_insect['약명'].unique() if str(x).strip() != ""])
@@ -277,6 +278,7 @@ elif menu == "🐛 살충제 검색":
 elif menu == "🍄 살균제 검색":
     st.title("🍄 살균제 검색 시스템")
     st.markdown("**처방과 혼용 가부를 한눈에!** 검색 조건을 입력하세요.")
+    st.markdown("※ 혼용가부는 해당 유통사(제조사)에서 제공하는 내용을 기반으로 작성되었습니다.")
     st.markdown("---")
 
     drug_list_fungi = sorted([str(x) for x in df_fungi['약명'].unique() if str(x).strip() != ""])
