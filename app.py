@@ -154,7 +154,8 @@ if menu == "📢 법인 공지사항":
         <p style='color: #7F8C8D; font-size: 0.95em; margin-bottom: 15px;'>📅 등록일: 2026년 06월 17일</p>
         <p style='color: #34495E; font-size: 1.1em; line-height: 1.6;'>
             조합원분들의 효율적이고 과학적인 영농 활동을 지원하기 위해 법인 자체 <b>'농약 검색 시스템'</b>을 구축하였습니다. <br>
-            현재 살충제(90%) 및 살균제(70%) 데이터가 등록되어 있으며, 이용 중 추가를 원하시는 농약이나 불편한 점이 있다면 언제든 좌측 메뉴의 <b>'💬 건의사항 및 피드백'</b> 방에 남겨주세요!
+            현재 법인에 구비된 살충제(95%) 및 살균제(100%) 데이터가 등록되어 있으며, 이용 중 추가를 원하시는 농약이나 불편한 점이 있다면 
+            언제든 좌측 메뉴의 <b>'💬 건의사항 및 피드백'</b> 방에 남겨주세요!
         </p>
     </div>
     """, unsafe_allow_html=True)
@@ -166,6 +167,7 @@ if menu == "📢 법인 공지사항":
 elif menu == "🐛 살충제 검색":
     st.title("🐛 살충제 검색 시스템")
     st.markdown("**처방과 혼용 가부를 한눈에!** 검색 조건을 입력하세요.")
+    st.markdown("※ 혼용가부는 해당 유통사(제조사)에서 제공하는 내용을 기반으로 작성되었습니다.")
     st.markdown("---")
 
     drug_list = sorted([str(x) for x in df_insect['약명'].unique() if str(x).strip() != ""])
@@ -276,6 +278,7 @@ elif menu == "🐛 살충제 검색":
 elif menu == "🍄 살균제 검색":
     st.title("🍄 살균제 검색 시스템")
     st.markdown("**처방과 혼용 가부를 한눈에!** 검색 조건을 입력하세요.")
+    st.markdown("※ 혼용가부는 해당 유통사(제조사)에서 제공하는 내용을 기반으로 작성되었습니다.")
     st.markdown("---")
 
     drug_list_fungi = sorted([str(x) for x in df_fungi['약명'].unique() if str(x).strip() != ""])
@@ -420,3 +423,4 @@ elif menu == "💬 건의사항 및 피드백":
                         st.session_state.last_submit = now
                     else:
                         st.error(f"진짜 오류가 발생했습니다: {e}")
+
