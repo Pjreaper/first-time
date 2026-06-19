@@ -22,14 +22,33 @@ st.markdown("""
             font-size: 2.0rem !important;
         }
         
-        /* (2) 모바일 전용: 좌측 상단 사이드바 열기 버튼( > 모양 ) 눈에 확 띄게 만들기 */
+        /* (2) 모바일 전용: 좌측 상단 사이드바 열기 버튼을 "메뉴 열기" 알약 단추로 대개조 */
         button[data-testid="collapsedControl"] {
-            background-color: #1E8449 !important; /* 시그니처 초록색 */
+            background-color: #1E8449 !important; /* 아우내 시그니처 초록색 */
             color: white !important;
-            border-radius: 8px !important;
-            transform: scale(1.4) !important; /* 버튼 크기 1.4배 확대 */
-            margin: 15px !important;
-            box-shadow: 0px 4px 10px rgba(0,0,0,0.3) !important; /* 그림자 효과 */
+            border-radius: 30px !important; /* 동글동글한 알약 모양 */
+            padding: 6px 18px !important;
+            height: 42px !important; /* 상단바 높이에 딱 맞춤 */
+            width: auto !important; /* 글자 길이에 맞게 자동 늘어남 */
+            position: fixed !important;
+            top: 8px !important;
+            left: 12px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            box-shadow: 0px 4px 15px rgba(30, 132, 73, 0.5) !important; /* 초록색 광채 그림자 */
+            border: 2px solid #FFFFFF !important; /* 테두리를 흰색으로 주어 배경과 확실히 분리 */
+            z-index: 999999 !important;
+        }
+        
+        /* 버튼 내부에 "메뉴 열기" 글씨 강제 주입 */
+        button[data-testid="collapsedControl"]::after {
+            content: " 메뉴 열기" !important;
+            font-size: 1.1rem !important;
+            font-weight: bold !important;
+            color: white !important;
+            white-space: nowrap !important;
+            margin-left: 4px !important;
         }
     </style>
 """, unsafe_allow_html=True)
@@ -69,21 +88,17 @@ components.html("""
         const doc = window.parent.document;
         
         function setSidebarAutoClose() {
-            // 라디오 버튼(메뉴)들을 찾습니다.
             const radios = doc.querySelectorAll('input[type="radio"]');
             
             radios.forEach(radio => {
                 if (!radio.hasAttribute('data-click-bound')) {
-                    radio.setAttribute('data-click-bound', 'true'); // 도장 쾅!
+                    radio.setAttribute('data-click-bound', 'true');
                     
                     radio.addEventListener('click', () => {
-                        // 1. 사이드바 전체 구역을 찾습니다.
                         const sidebar = doc.querySelector('[data-testid="stSidebar"]');
                         if (sidebar) {
-                            // 2. 사이드바 안에 있는 '첫 번째 버튼'(이게 바로 << 닫기 버튼입니다!)을 찾습니다.
                             const closeBtn = sidebar.querySelector('button');
                             if (closeBtn) {
-                                // 3. 부드럽게 넘어가도록 0.15초 뒤에 닫아줍니다.
                                 setTimeout(() => closeBtn.click(), 150);
                             }
                         }
@@ -92,7 +107,6 @@ components.html("""
             });
         }
         
-        // 0.5초마다 투명 인간을 다시 투입시킵니다!
         setInterval(setSidebarAutoClose, 500);
     </script>
 """, height=0, width=0)
@@ -101,7 +115,7 @@ components.html("""
 st.markdown("""
     <div style='background-color: #FEF9E7; padding: 15px; border-radius: 8px; border-left: 6px solid #F4D03F; margin-bottom: 20px;'>
         <span style='font-size: 1.2em; font-weight: bold; color: #7D6608;'>📱 스마트폰(모바일) 이용자 안내:</span> <br>
-        화면에 맨 왼쪽 위 <b>'화살표( > ) 버튼'</b>을 누르시면 살충제/살균제/공지사항 선택 창이 나타납니다!
+        화면에 맨 왼쪽 위 <b>'메뉴 열기 버튼'</b>을 누르시면 살충제/살균제/공지사항 선택 창이 나타납니다!
     </div>
 """, unsafe_allow_html=True)
 
@@ -154,7 +168,7 @@ if menu == "📢 법인 공지사항":
         <p style='color: #7F8C8D; font-size: 0.95em; margin-bottom: 15px;'>📅 등록일: 2026년 06월 17일</p>
         <p style='color: #34495E; font-size: 1.1em; line-height: 1.6;'>
             조합원분들의 효율적이고 과학적인 영농 활동을 지원하기 위해 법인 자체 <b>'농약 검색 시스템'</b>을 구축하였습니다. <br>
-            현재 법인에 구비된 살충제(95%) 및 살균제(100%) 데이터가 등록되어 있으며, 이용 중 추가를 원하시는 농약이나 불편한 점이 있다면 
+            현재 법인에 구비된 살충제 및 살균제 데이터가 등록되어 있으며, 이용 중 추가를 원하시는 농약이나 불편한 점이 있다면 
             언제든 좌측 메뉴의 <b>'💬 건의사항 및 피드백'</b> 방에 남겨주세요!
         </p>
     </div>
@@ -252,7 +266,7 @@ elif menu == "🐛 살충제 검색":
                 with col2:
                     st.markdown("#### 🧪 성분 및 침투 정보")
                     st.write(f"**· 성분1:** {base_info['성분1(한글)']} ({base_info['성분1함량(%)']}%)")
-                    st.write(f"  - 계통: {base_info['성분1계통']} [{base_info['성분1작용기작']}]")
+                    st.write(f"  - 계통: {base_info['성분1계통']} [{base_info['성bt1작용기작']}]")
                     if base_info['성분2(한글)'] != "":
                         st.write(f"**· 성분2:** {base_info['성분2(한글)']} ({base_info['성분2함량(%)']}%)")
                         st.write(f"  - 계통: {base_info['성분2계통']} [{base_info['성분2작용기작']}]")
@@ -423,4 +437,3 @@ elif menu == "💬 건의사항 및 피드백":
                         st.session_state.last_submit = now
                     else:
                         st.error(f"진짜 오류가 발생했습니다: {e}")
-
