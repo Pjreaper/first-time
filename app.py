@@ -4,13 +4,15 @@ import gspread
 import json
 from google.oauth2.service_account import Credentials
 from datetime import datetime, timedelta
-import streamlit.components.v1 as components  # 💡 마법 도구
 
 st.set_page_config(page_title="아우내 영농조합법인 농약 검색기", page_icon="🌱", layout="wide")
 
-# 1. CSS는 깔끔하게 라디오 버튼 글씨 크기만 키웁니다.
+# ====================================================================
+# 🎨 [보안 벽을 뚫는 강력한 순수 CSS 디자인 설정]
+# ====================================================================
 st.markdown("""
     <style>
+        /* (1) 사이드바 메뉴 글씨 크기 키우기 */
         .stSidebar .stRadio p {
             font-size: 1.4rem !important;
             font-weight: bold !important;
@@ -19,6 +21,45 @@ st.markdown("""
         }
         .stSidebar h1, .stSidebar h2, .stSidebar h3 {
             font-size: 2.0rem !important;
+        }
+        
+        /* (2) 모바일 전용: 원래 있던 >> 버튼 자체를 커다란 초록색 알약으로 강제 개조 */
+        header[data-testid="stHeader"] button:first-of-type,
+        div[data-testid="collapsedControl"] button {
+            background-color: #1E8449 !important; /* 아우내 초록색 */
+            color: white !important;
+            border-radius: 30px !important; /* 알약 모양 */
+            padding: 6px 16px !important;
+            height: 40px !important;
+            width: 125px !important; /* 글자가 들어가도록 가로 길이 확장 */
+            position: fixed !important;
+            top: 10px !important;
+            left: 12px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            box-shadow: 0px 4px 12px rgba(30, 132, 73, 0.5) !important;
+            border: 2px solid #FFFFFF !important;
+            z-index: 999999 !important;
+        }
+        
+        /* 원래 있던 작은 화살표(SVG) 아이콘을 하얀색으로 만들고 살짝 키우기 */
+        header[data-testid="stHeader"] button:first-of-type svg,
+        div[data-testid="collapsedControl"] button svg {
+            fill: white !important;
+            color: white !important;
+            transform: scale(1.2) !important;
+            margin-right: 4px !important;
+        }
+        
+        /* 🚨 핵심: 버튼 내부에 "메뉴 열기" 글씨를 강제로 주입 */
+        header[data-testid="stHeader"] button:first-of-type::after,
+        div[data-testid="collapsedControl"] button::after {
+            content: "메뉴 열기" !important;
+            font-size: 1.0rem !important;
+            font-weight: bold !important;
+            color: white !important;
+            white-space: nowrap !important;
         }
     </style>
 """, unsafe_allow_html=True)
@@ -49,90 +90,6 @@ menu = st.sidebar.radio(
     ["📢 법인 공지사항", "🐛 살충제 검색", "🍄 살균제 검색", "💬 건의사항 및 피드백"]
 )
 st.sidebar.markdown("---")
-
-# ====================================================================
-# 💡 [궁극의 마법 코드] 사이드바 자동 닫기 + 모바일 '메뉴 열기' 대형 버튼 강제 생성
-# ====================================================================
-components.html("""
-    <script>
-        const doc = window.parent.document;
-
-        function manageSidebarAndButton() {
-            // 1. 라디오 버튼(메뉴) 클릭 시 사이드바 자동 닫기 로직
-            const radios = doc.querySelectorAll('input[type="radio"]');
-            radios.forEach(radio => {
-                if (!radio.hasAttribute('data-click-bound')) {
-                    radio.setAttribute('data-click-bound', 'true');
-                    radio.addEventListener('click', () => {
-                        if (window.innerWidth <= 768) { // 모바일에서만 작동
-                            const sidebar = doc.querySelector('[data-testid="stSidebar"]');
-                            if (sidebar) {
-                                const closeBtn = sidebar.querySelector('button');
-                                if (closeBtn) setTimeout(() => closeBtn.click(), 150);
-                            }
-                        }
-                    });
-                }
-            });
-
-            // 2. '메뉴 열기' 대형 알약 버튼 강제 생성 및 관리
-            const origOpenBtnWrapper = doc.querySelector('[data-testid="collapsedControl"]');
-            let customBtn = doc.getElementById('aunae-custom-menu-btn');
-
-            if (origOpenBtnWrapper) {
-                if (window.innerWidth <= 768) {
-                    // 📱 모바일 화면: 원래 버튼(>>)을 투명하게 숨기고, 우리 버튼을 띄웁니다!
-                    origOpenBtnWrapper.style.opacity = '0';
-
-                    if (!customBtn) {
-                        customBtn = doc.createElement('div');
-                        customBtn.id = 'aunae-custom-menu-btn';
-                        customBtn.innerHTML = '👉 메뉴 열기';
-                        customBtn.style.cssText = `
-                            position: fixed;
-                            top: 10px;
-                            left: 12px;
-                            z-index: 999999;
-                            background-color: #1E8449;
-                            color: white;
-                            padding: 8px 18px;
-                            border-radius: 30px;
-                            font-size: 1.1rem;
-                            font-weight: bold;
-                            cursor: pointer;
-                            box-shadow: 0px 4px 12px rgba(30, 132, 73, 0.6);
-                            border: 2px solid white;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            font-family: sans-serif;
-                        `;
-                        // 우리가 만든 예쁜 버튼을 누르면, 숨겨진 원래 버튼(>>)을 자바스크립트가 대신 눌러줍니다!
-                        customBtn.onclick = () => {
-                            const realBtn = doc.querySelector('[data-testid="collapsedControl"]');
-                            if (realBtn) {
-                                realBtn.click();
-                            }
-                        };
-                        doc.body.appendChild(customBtn);
-                    }
-                    customBtn.style.display = 'flex';
-                } else {
-                    // 💻 PC 화면: 원래 버튼(>>) 다시 보이기, 우리 버튼 숨기기
-                    origOpenBtnWrapper.style.opacity = '1';
-                    if (customBtn) customBtn.style.display = 'none';
-                }
-            } else {
-                // 📂 사이드바가 이미 열려있을 때: 우리 버튼 깔끔하게 숨기기
-                if (customBtn) customBtn.style.display = 'none';
-            }
-        }
-
-        // 0.2초마다 화면 상태를 감시하면서 스트림릿의 방해를 모두 뚫어냅니다!
-        setInterval(manageSidebarAndButton, 200);
-    </script>
-""", height=0, width=0)
-# ====================================================================
 
 st.markdown("""
     <div style='background-color: #FEF9E7; padding: 15px; border-radius: 8px; border-left: 6px solid #F4D03F; margin-bottom: 20px;'>
