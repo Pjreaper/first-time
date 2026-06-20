@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 st.set_page_config(page_title="아우내 영농조합법인 농약 검색기", page_icon="🌱", layout="wide")
 
 # ====================================================================
-# 🎨 [보안 벽을 뚫는 강력한 순수 CSS 디자인 설정]
+# 🎨 [오른쪽 메뉴는 건들지 않고, 왼쪽 사이드바 버튼만 정확히 저격하는 CSS]
 # ====================================================================
 st.markdown("""
     <style>
@@ -23,15 +23,14 @@ st.markdown("""
             font-size: 2.0rem !important;
         }
         
-        /* (2) 모바일 전용: 원래 있던 >> 버튼 자체를 커다란 초록색 알약으로 강제 개조 */
-        header[data-testid="stHeader"] button:first-of-type,
+        /* (2) 모바일 전용: 오른쪽 점3개 메뉴는 제외하고, 오직 왼쪽 사이드바 열기 버튼만 초록색 알약으로 대개조 */
         div[data-testid="collapsedControl"] button {
             background-color: #1E8449 !important; /* 아우내 초록색 */
             color: white !important;
             border-radius: 30px !important; /* 알약 모양 */
             padding: 6px 16px !important;
             height: 40px !important;
-            width: 125px !important; /* 글자가 들어가도록 가로 길이 확장 */
+            width: 125px !important; /* 글자가 들어갈 수 있게 가로 확장 */
             position: fixed !important;
             top: 10px !important;
             left: 12px !important;
@@ -43,8 +42,7 @@ st.markdown("""
             z-index: 999999 !important;
         }
         
-        /* 원래 있던 작은 화살표(SVG) 아이콘을 하얀색으로 만들고 살짝 키우기 */
-        header[data-testid="stHeader"] button:first-of-type svg,
+        /* 화살표(SVG) 아이콘 색상을 흰색으로 바꾸고 오른쪽 마진 살짝 주기 */
         div[data-testid="collapsedControl"] button svg {
             fill: white !important;
             color: white !important;
@@ -52,8 +50,7 @@ st.markdown("""
             margin-right: 4px !important;
         }
         
-        /* 🚨 핵심: 버튼 내부에 "메뉴 열기" 글씨를 강제로 주입 */
-        header[data-testid="stHeader"] button:first-of-type::after,
+        /* 버튼 내부에 "메뉴 열기" 글씨 강제 주입 */
         div[data-testid="collapsedControl"] button::after {
             content: "메뉴 열기" !important;
             font-size: 1.0rem !important;
