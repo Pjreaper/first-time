@@ -4,11 +4,12 @@ import gspread
 import json
 from google.oauth2.service_account import Credentials
 from datetime import datetime, timedelta
+import streamlit.components.v1 as components  # 사이드바 자동 닫기 도구
 
 st.set_page_config(page_title="아우내 영농조합법인 농약 검색기", page_icon="🌱", layout="wide")
 
 # ====================================================================
-# 🎨 [오른쪽 메뉴는 건들지 않고, 왼쪽 사이드바 버튼만 정확히 저격하는 CSS]
+# 🎨 [진짜 최종 CSS] 변경된 최신 이름표(stSidebarCollapsedControl) 완벽 저격!
 # ====================================================================
 st.markdown("""
     <style>
@@ -23,8 +24,9 @@ st.markdown("""
             font-size: 2.0rem !important;
         }
         
-        /* (2) 모바일 전용: 오른쪽 점3개 메뉴는 제외하고, 오직 왼쪽 사이드바 열기 버튼만 초록색 알약으로 대개조 */
-        div[data-testid="collapsedControl"] button {
+        /* (2) 모바일 전용: 오른쪽 메뉴는 무시하고, 오직 '사이드바 열기 버튼'만 초록색 알약으로 대개조 */
+        [data-testid="stSidebarCollapsedControl"] button,
+        [data-testid="collapsedControl"] button {
             background-color: #1E8449 !important; /* 아우내 초록색 */
             color: white !important;
             border-radius: 30px !important; /* 알약 모양 */
@@ -43,7 +45,8 @@ st.markdown("""
         }
         
         /* 화살표(SVG) 아이콘 색상을 흰색으로 바꾸고 오른쪽 마진 살짝 주기 */
-        div[data-testid="collapsedControl"] button svg {
+        [data-testid="stSidebarCollapsedControl"] button svg,
+        [data-testid="collapsedControl"] button svg {
             fill: white !important;
             color: white !important;
             transform: scale(1.2) !important;
@@ -51,7 +54,8 @@ st.markdown("""
         }
         
         /* 버튼 내부에 "메뉴 열기" 글씨 강제 주입 */
-        div[data-testid="collapsedControl"] button::after {
+        [data-testid="stSidebarCollapsedControl"] button::after,
+        [data-testid="collapsedControl"] button::after {
             content: "메뉴 열기" !important;
             font-size: 1.0rem !important;
             font-weight: bold !important;
@@ -87,6 +91,40 @@ menu = st.sidebar.radio(
     ["📢 법인 공지사항", "🐛 살충제 검색", "🍄 살균제 검색", "💬 건의사항 및 피드백"]
 )
 st.sidebar.markdown("---")
+
+# ====================================================================
+# 💡 [마법의 코드] 모바일에서 메뉴 선택 시 사이드바 자동 닫기 (정상 작동 확인됨)
+# ====================================================================
+components.html("""
+    <script>
+        const doc = window.parent.document;
+        
+        function setSidebarAutoClose() {
+            const radios = doc.querySelectorAll('input[type="radio"]');
+            
+            radios.forEach(radio => {
+                if (!radio.hasAttribute('data-click-bound')) {
+                    radio.setAttribute('data-click-bound', 'true');
+                    
+                    radio.addEventListener('click', () => {
+                        if (window.innerWidth <= 768) {
+                            const sidebar = doc.querySelector('[data-testid="stSidebar"]');
+                            if (sidebar) {
+                                const closeBtn = sidebar.querySelector('button');
+                                if (closeBtn) {
+                                    setTimeout(() => closeBtn.click(), 150);
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        }
+        
+        setInterval(setSidebarAutoClose, 500);
+    </script>
+""", height=0, width=0)
+# ====================================================================
 
 st.markdown("""
     <div style='background-color: #FEF9E7; padding: 15px; border-radius: 8px; border-left: 6px solid #F4D03F; margin-bottom: 20px;'>
