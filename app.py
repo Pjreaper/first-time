@@ -4,16 +4,15 @@ import gspread
 import json
 from google.oauth2.service_account import Credentials
 from datetime import datetime, timedelta
-import streamlit.components.v1 as components  # 사이드바 자동 닫기 도구
+import streamlit.components.v1 as components 
 
 st.set_page_config(page_title="아우내 영농조합법인 농약 검색기", page_icon="🌱", layout="wide")
 
 # ====================================================================
-# 🎨 [진짜 최종 CSS] 변경된 최신 이름표(stSidebarCollapsedControl) 완벽 저격!
+# 🎨 [진짜 최종 CSS] 
 # ====================================================================
 st.markdown("""
     <style>
-        /* (1) 사이드바 메뉴 글씨 크기 키우기 */
         .stSidebar .stRadio p {
             font-size: 1.4rem !important;
             font-weight: bold !important;
@@ -24,15 +23,14 @@ st.markdown("""
             font-size: 2.0rem !important;
         }
         
-        /* (2) 모바일 전용: 오른쪽 메뉴는 무시하고, 오직 '사이드바 열기 버튼'만 초록색 알약으로 대개조 */
         [data-testid="stSidebarCollapsedControl"] button,
         [data-testid="collapsedControl"] button {
-            background-color: #1E8449 !important; /* 아우내 초록색 */
+            background-color: #1E8449 !important; 
             color: white !important;
-            border-radius: 30px !important; /* 알약 모양 */
+            border-radius: 30px !important; 
             padding: 6px 16px !important;
             height: 40px !important;
-            width: 125px !important; /* 글자가 들어갈 수 있게 가로 확장 */
+            width: 125px !important; 
             position: fixed !important;
             top: 10px !important;
             left: 12px !important;
@@ -44,7 +42,6 @@ st.markdown("""
             z-index: 999999 !important;
         }
         
-        /* 화살표(SVG) 아이콘 색상을 흰색으로 바꾸고 오른쪽 마진 살짝 주기 */
         [data-testid="stSidebarCollapsedControl"] button svg,
         [data-testid="collapsedControl"] button svg {
             fill: white !important;
@@ -53,7 +50,6 @@ st.markdown("""
             margin-right: 4px !important;
         }
         
-        /* 버튼 내부에 "메뉴 열기" 글씨 강제 주입 */
         [data-testid="stSidebarCollapsedControl"] button::after,
         [data-testid="collapsedControl"] button::after {
             content: "메뉴 열기" !important;
@@ -83,17 +79,18 @@ except Exception as e:
     st.error(f"엑셀 파일을 찾을 수 없거나 시트 이름이 틀렸습니다...\n에러: {e}")
     st.stop()
 
-st.sidebar.title("🔍 아우내영농조합법인 살충/살균 검색기")
+st.sidebar.title("🔍 아우내영농조합법인 종합 포털")
 st.sidebar.markdown("---")
 
+# 💡 여기에 '🧮 희석 농도 계산기' 메뉴가 추가되었습니다!
 menu = st.sidebar.radio(
     "메뉴를 선택하세요", 
-    ["📢 법인 공지사항", "🐛 살충제 검색", "🍄 살균제 검색", "💬 건의사항 및 피드백"]
+    ["📢 법인 공지사항", "🐛 살충제 검색", "🍄 살균제 검색", "🧮 희석 농도 계산기", "💬 건의사항 및 피드백"]
 )
 st.sidebar.markdown("---")
 
 # ====================================================================
-# 💡 [마법의 코드] 모바일에서 메뉴 선택 시 사이드바 자동 닫기 (정상 작동 확인됨)
+# 💡 사이드바 자동 닫기 
 # ====================================================================
 components.html("""
     <script>
@@ -129,7 +126,7 @@ components.html("""
 st.markdown("""
     <div style='background-color: #FEF9E7; padding: 15px; border-radius: 8px; border-left: 6px solid #F4D03F; margin-bottom: 20px;'>
         <span style='font-size: 1.2em; font-weight: bold; color: #7D6608;'>📱 스마트폰(모바일) 이용자 안내:</span> <br>
-        화면에 맨 왼쪽 위 <b>'메뉴 열기 버튼'</b>을 누르시면 살충제/살균제/공지사항 선택 창이 나타납니다!
+        화면에 맨 왼쪽 위 <b>'메뉴 열기 버튼'</b>을 누르시면 살충제/살균제/공지/계산기 선택 창이 나타납니다!
     </div>
 """, unsafe_allow_html=True)
 
@@ -188,9 +185,8 @@ if menu == "📢 법인 공지사항":
     </div>
     """, unsafe_allow_html=True)
 
-
 # ==========================================
-# 🐛 [2. 살충제 검색 화면]
+# 🐛 [2. 살충제 검색 화면] (생략 없이 전체 포함)
 # ==========================================
 elif menu == "🐛 살충제 검색":
     st.title("🐛 살충제 검색 시스템")
@@ -301,7 +297,7 @@ elif menu == "🐛 살충제 검색":
                 st.markdown("---")
 
 # ==========================================
-# 🍄 [3. 살균제 검색 화면]
+# 🍄 [3. 살균제 검색 화면] 
 # ==========================================
 elif menu == "🍄 살균제 검색":
     st.title("🍄 살균제 검색 시스템")
@@ -397,6 +393,44 @@ elif menu == "🍄 살균제 검색":
                     st.write(f"**· 혼용 가능(살균):** {base_info_f.get('혼용가능한 살균제', '정보 없음')}")
                     st.markdown(f"**· 🚨 혼용 불가/주의:** <span style='color:red'>{base_info_f.get('혼용불가(주의)약제', '정보 없음')}</span>", unsafe_allow_html=True)
                     st.markdown("---")
+
+# ==========================================
+# 🧮 [새로운 메뉴] 희석 농도 계산기 
+# ==========================================
+elif menu == "🧮 희석 농도 계산기":
+    st.title("🧮 농약/영양제 사용량 계산기")
+    st.markdown("약제 용량과 희석 배수만 입력하면 1말(20L)당 필요량과 총 사용량을 자동으로 계산해 줍니다.")
+    st.markdown("---")
+
+    st.markdown("""
+    <div style='background-color: #E8F8F5; padding: 20px; border-radius: 12px; border-left: 6px solid #117A65; margin-bottom: 25px;'>
+        <h4 style='margin-top:0; color: #117A65;'>💡 아우내 공식 계산법</h4>
+        <ul style='font-size: 1.1em; color: #2C3E50; line-height: 1.8;'>
+            <li><b>1말(20L)당 필요량</b> = 20,000ml ÷ 희석배수</li>
+            <li><b>총 몇 말용인가?</b> = 약제 총 용량 ÷ (20,000ml ÷ 희석배수)</li>
+        </ul>
+    </div>
+    """, unsafe_allow_html=True)
+
+    col1, col2 = st.columns(2)
+    with col1:
+        total_vol = st.number_input("🧪 약제/영양제 총 용량 (ml 또는 g)", min_value=0.0, value=500.0, step=50.0)
+    with col2:
+        dilution = st.number_input("💧 희석 배수 (예: 1000배면 1000 입력)", min_value=1.0, value=1000.0, step=100.0)
+
+    if total_vol > 0 and dilution > 0:
+        amount_per_20L = 20000 / dilution
+        total_mal = total_vol / amount_per_20L
+        total_water = total_mal * 20
+
+        st.markdown("### 📊 자동 계산 결과")
+        col_res1, col_res2, col_res3 = st.columns(3)
+        with col_res1:
+            st.info(f"**💧 1말(20L)당 약제 투입량**\n### {amount_per_20L:.1f} ml(g)")
+        with col_res2:
+            st.success(f"**🚜 총 제조 가능 말 수**\n### {total_mal:.1f} 말용")
+        with col_res3:
+            st.warning(f"**🌊 필요한 총 물의 양**\n### {total_water:.1f} L")
 
 # ==========================================
 # 💬 [4. 건의사항 및 피드백 화면]
