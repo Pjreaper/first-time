@@ -392,7 +392,7 @@ elif menu == "🧮 희석 농도 계산기":
     with tab1:
         st.markdown("""
         <div style='background-color: #E8F8F5; padding: 15px; border-radius: 12px; border-left: 6px solid #117A65; margin-bottom: 20px;'>
-            <b>💡 희석배수 계산법:</b> 1말당 필요량 = 20,000ml ÷ 희석배수
+            <b>💡 희석배수 계산법:</b> 1말당 필요량 = 20,000ml ÷ 희석배수  <br>
             <b>💡 사용량 계산법:</b> 총 몇 말용인가? = 약제 총 용량 ÷ 1말당 사용량
         </div>
         """, unsafe_allow_html=True)
@@ -420,7 +420,7 @@ elif menu == "🧮 희석 농도 계산기":
     with tab2:
         st.markdown("""
         <div style='background-color: #FDF2E9; padding: 15px; border-radius: 12px; border-left: 6px solid #E67E22; margin-bottom: 20px;'>
-            <b>💡 희석배수 계산법:</b> 1말당 필요량 = 20,000ml ÷ 희석배수
+            <b>💡 희석배수 계산법:</b> 1말당 필요량 = 20,000ml ÷ 희석배수  <br>
             <b>💡 사용량 계산법:</b> 총 몇 말용인가? = 약제 총 용량 ÷ 1말당 사용량
         </div>
         """, unsafe_allow_html=True)
