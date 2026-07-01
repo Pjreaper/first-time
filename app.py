@@ -384,38 +384,65 @@ elif menu == "🍄 살균제 검색":
 
 elif menu == "🧮 희석 농도 계산기":
     st.title("🧮 농약/영양제 사용량 계산기")
-    st.markdown("약제 용량과 희석 배수만 입력하면 1말(20L)당 필요량과 총 사용량을 자동으로 계산해 줍니다.")
+    st.markdown("나에게 편한 계산 방식을 선택해서 숫자를 입력해 주세요.")
     st.markdown("---")
 
-    st.markdown("""
-    <div style='background-color: #E8F8F5; padding: 20px; border-radius: 12px; border-left: 6px solid #117A65; margin-bottom: 25px;'>
-        <h4 style='margin-top:0; color: #117A65;'>💡 사용량 공식 계산법</h4>
-        <ul style='font-size: 1.1em; color: #2C3E50; line-height: 1.8;'>
-            <li><b>1말(20L)당 필요량</b> = 20,000ml ÷ 희석배수</li>
-            <li><b>총 몇 말용인가?</b> = 약제 총 용량 ÷ (20,000ml ÷ 희석배수)</li>
-        </ul>
-    </div>
-    """, unsafe_allow_html=True)
+    tab1, tab2 = st.tabs(["💧 희석 배수 기준 계산", "📦 1말당 사용량(g/ml) 기준 계산"])
 
-    col1, col2 = st.columns(2)
-    with col1:
-        total_vol = st.number_input("🧪 약제/영양제 총 용량 (ml 또는 g)", min_value=0, value=500, step=50)
-    with col2:
-        dilution = st.number_input("💧 희석 배수 (예: 1000배면 1000 입력)", min_value=1, value=1000, step=100)
+    with tab1:
+        st.markdown("""
+        <div style='background-color: #E8F8F5; padding: 15px; border-radius: 12px; border-left: 6px solid #117A65; margin-bottom: 20px;'>
+            <b>💡 희석배수 계산법:</b> 1말당 필요량 = 20,000ml ÷ 희석배수
+            <b>💡 사용량 계산법:</b> 총 몇 말용인가? = 약제 총 용량 ÷ 1말당 사용량
+        </div>
+        """, unsafe_allow_html=True)
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            total_vol_1 = st.number_input("🧪 약제 총 용량 (ml 또는 g)", min_value=0, value=500, step=50, key="vol1")
+        with col2:
+            dilution = st.number_input("💧 희석 배수 (예: 1000배면 1000 입력)", min_value=1, value=1000, step=100, key="dil")
 
-    if total_vol > 0 and dilution > 0:
-        amount_per_20L = 20000 / dilution
-        total_mal = total_vol / amount_per_20L
-        total_water = total_mal * 20
+        if total_vol_1 > 0 and dilution > 0:
+            amount_per_20L = 20000 / dilution
+            total_mal = total_vol_1 / amount_per_20L
+            total_water = total_mal * 20
 
-        st.markdown("### 📊 자동 계산 결과")
-        col_res1, col_res2, col_res3 = st.columns(3)
-        with col_res1:
-            st.info(f"**💧 1말(20L)당 약제 투입량**\n### {int(round(amount_per_20L))} ml(g)")
-        with col_res2:
-            st.success(f"**🚜 총 제조 가능 말 수**\n### {int(round(total_mal))} 말용")
-        with col_res3:
-            st.warning(f"**🌊 필요한 총 물의 양**\n### {int(round(total_water))} L")
+            st.markdown("### 📊 자동 계산 결과")
+            col_res1, col_res2, col_res3 = st.columns(3)
+            with col_res1:
+                st.info(f"**💧 1말(20L)당 약제 투입량**\n### {int(round(amount_per_20L))} ml(g)")
+            with col_res2:
+                st.success(f"**🚜 총 제조 가능 말 수**\n### {int(round(total_mal))} 말용")
+            with col_res3:
+                st.warning(f"**🌊 필요한 총 물의 양**\n### {int(round(total_water))} L")
+
+    with tab2:
+        st.markdown("""
+        <div style='background-color: #FDF2E9; padding: 15px; border-radius: 12px; border-left: 6px solid #E67E22; margin-bottom: 20px;'>
+            <b>💡 희석배수 계산법:</b> 1말당 필요량 = 20,000ml ÷ 희석배수
+            <b>💡 사용량 계산법:</b> 총 몇 말용인가? = 약제 총 용량 ÷ 1말당 사용량
+        </div>
+        """, unsafe_allow_html=True)
+        
+        col3, col4 = st.columns(2)
+        with col3:
+            total_vol_2 = st.number_input("🧪 약제 총 용량 (ml 또는 g)", min_value=0, value=500, step=50, key="vol2")
+        with col4:
+            use_per_mal = st.number_input("📦 라벨에 적힌 1말(20L)당 사용량 (g 또는 ml)", min_value=1, value=20, step=5, key="use_mal")
+
+        if total_vol_2 > 0 and use_per_mal > 0:
+            total_mal_2 = total_vol_2 / use_per_mal
+            total_water_2 = total_mal_2 * 20
+
+            st.markdown("### 📊 자동 계산 결과")
+            col_res4, col_res5, col_res6 = st.columns(3)
+            with col_res4:
+                st.info(f"**💧 1말(20L)당 약제 투입량**\n### {use_per_mal} ml(g)")
+            with col_res5:
+                st.success(f"**🚜 총 제조 가능 말 수**\n### {int(round(total_mal_2))} 말용")
+            with col_res6:
+                st.warning(f"**🌊 필요한 총 물의 양**\n### {int(round(total_water_2))} L")
 
 
 elif menu == "💬 건의사항 및 피드백":
