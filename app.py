@@ -389,7 +389,7 @@ elif menu == "🧮 희석 농도 계산기":
 
     st.markdown("""
     <div style='background-color: #E8F8F5; padding: 20px; border-radius: 12px; border-left: 6px solid #117A65; margin-bottom: 25px;'>
-        <h4 style='margin-top:0; color: #117A65;'>💡 아우내 공식 계산법</h4>
+        <h4 style='margin-top:0; color: #117A65;'>💡 사용량 공식 계산법</h4>
         <ul style='font-size: 1.1em; color: #2C3E50; line-height: 1.8;'>
             <li><b>1말(20L)당 필요량</b> = 20,000ml ÷ 희석배수</li>
             <li><b>총 몇 말용인가?</b> = 약제 총 용량 ÷ (20,000ml ÷ 희석배수)</li>
@@ -399,9 +399,9 @@ elif menu == "🧮 희석 농도 계산기":
 
     col1, col2 = st.columns(2)
     with col1:
-        total_vol = st.number_input("🧪 약제/영양제 총 용량 (ml 또는 g)", min_value=0.0, value=500.0, step=50.0)
+        total_vol = st.number_input("🧪 약제/영양제 총 용량 (ml 또는 g)", min_value=0, value=500, step=50)
     with col2:
-        dilution = st.number_input("💧 희석 배수 (예: 1000배면 1000 입력)", min_value=1.0, value=1000.0, step=100.0)
+        dilution = st.number_input("💧 희석 배수 (예: 1000배면 1000 입력)", min_value=1, value=1000, step=100)
 
     if total_vol > 0 and dilution > 0:
         amount_per_20L = 20000 / dilution
@@ -411,11 +411,11 @@ elif menu == "🧮 희석 농도 계산기":
         st.markdown("### 📊 자동 계산 결과")
         col_res1, col_res2, col_res3 = st.columns(3)
         with col_res1:
-            st.info(f"**💧 1말(20L)당 약제 투입량**\n### {amount_per_20L:.1f} ml(g)")
+            st.info(f"**💧 1말(20L)당 약제 투입량**\n### {int(round(amount_per_20L))} ml(g)")
         with col_res2:
-            st.success(f"**🚜 총 제조 가능 말 수**\n### {total_mal:.1f} 말용")
+            st.success(f"**🚜 총 제조 가능 말 수**\n### {int(round(total_mal))} 말용")
         with col_res3:
-            st.warning(f"**🌊 필요한 총 물의 양**\n### {total_water:.1f} L")
+            st.warning(f"**🌊 필요한 총 물의 양**\n### {int(round(total_water))} L")
 
 
 elif menu == "💬 건의사항 및 피드백":
