@@ -335,11 +335,13 @@ elif menu == "🍄 살균제 검색":
             if ingredient_keyword_f:
                 mask_f = (
                     filtered_df_f['성분1(한글)'].astype(str).str.contains(ingredient_keyword_f, case=False, na=False, regex=False) |
+                    filtered_df_f['성분2(한글)'].astype(str).str.contains(ingredient_keyword_f, case=False, na=False, regex=False) |
                     filtered_df_f['성분1계통'].astype(str).str.contains(ingredient_keyword_f, case=False, na=False, regex=False) |
+                    filtered_df_f['성분2계통'].astype(str).str.contains(ingredient_keyword_f, case=False, na=False, regex=False) |
                     filtered_df_f['작용기작'].astype(str).str.contains(ingredient_keyword_f, case=False, na=False, regex=False)
                 )
                 filtered_df_f = filtered_df_f[mask_f]
-
+                
         if filtered_df_f.empty:
             st.warning("검색 조건에 맞는 약제가 없습니다.")
         else:
@@ -368,6 +370,9 @@ elif menu == "🍄 살균제 검색":
                     st.markdown("#### 🧪 성분 및 작용 원리")
                     st.write(f"**· 성분1:** {base_info_f.get('성분1(한글)', '')} ({base_info_f.get('성분1함량(%)', '')}%)")
                     st.write(f"   - 계통: {base_info_f.get('성분1계통', '')} [{base_info_f.get('성분1작용기작', '')}]")
+                    if base_info_f.get('성분2(한글)', '') != "":
+                        st.write(f"**· 성분2:** {base_info_f.get('성분2(한글)', '')} ({base_info_f.get('성분2함량(%)', '')}%)")
+                        st.write(f"   - 계통: {base_info_f.get('성분2계통', '')} [{base_info_f.get('성분2작용기작', '')}]")
                     st.write(f"**· 작용원리 1:** {base_info_f.get('작용원리1', '정보 없음')}")
                     st.write(f"**· 작용원리 2:** {base_info_f.get('작용원리2', '정보 없음')}")
 
