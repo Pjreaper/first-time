@@ -81,9 +81,8 @@ st.sidebar.markdown("---")
 
 menu = st.sidebar.radio(
     "메뉴를 선택하세요", 
-    ["📢 법인 공지사항", "🐛 살충제 검색", "🍄 살균제 검색", "🧮 희석 농도 계산기", "💬 건의사항 및 피드백"]
+    ["📢 법인 공지사항", "🐛 살충제 검색", "🍄 살균제 검색", "🧮 희석 농도 계산기", "🌐 천안시 농업지원/공지", "💬 건의사항 및 피드백"]
 )
-st.sidebar.markdown("---")
 
 components.html("""
     <script>
@@ -449,6 +448,29 @@ elif menu == "🧮 희석 농도 계산기":
             with col_res6:
                 st.warning(f"**🌊 필요한 총 물의 양**\n### {int(round(total_water_2))} L")
 
+elif menu == "🌐 천안시 농업지원/공지":
+    st.title("🌐 천안시 농업기술센터 공지")
+    st.markdown("천안시에서 진행하는 **각종 농업 보조사업 및 유용한 공지사항**을 확인하실 수 있습니다.")
+    st.markdown("매번 놓치기 쉬운 혜택들, 이제 여기서 바로 확인하세요!")
+    st.markdown("---")
+    
+    st.markdown("""
+    <div style='background-color: #EBF5FB; padding: 40px 20px; border-radius: 15px; text-align: center; border: 2px solid #3498DB; margin-top: 20px; margin-bottom: 20px;'>
+        <h2 style='color: #2980B9; margin-bottom: 15px; margin-top: 0;'>💡 천안시 농업 보조사업 확인하기</h2>
+        <p style='color: #34495E; font-size: 1.1em; margin-bottom: 30px; line-height: 1.6;'>
+            시청 홈페이지 보안 정책으로 인해 게시판으로 바로 연결해 드립니다.<br>
+            아래 버튼을 누르시면 <b>최신 공지사항 화면이 새 창으로 열립니다!</b>
+        </p>
+        <a href="https://www.cheonan.go.kr/bbs/BBSMSTR_000000000166/list.do" target="_blank" style="text-decoration: none;">
+            <button style="background-color: #3498DB; color: white; padding: 18px 35px; font-size: 1.4em; font-weight: bold; border: none; border-radius: 10px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                👉 최신 공지사항 보러가기 (클릭)
+            </button>
+        </a>
+    </div>
+    <div style="color: #7F8C8D; font-size: 0.95em; text-align: center; background-color: #F8F9F9; padding: 10px; border-radius: 8px;">
+        ※ 버튼을 터치하시면 천안시청 공식 홈페이지로 이동합니다. 뒤로 가기를 누르시면 다시 앱으로 돌아옵니다.
+    </div>
+    """, unsafe_allow_html=True)
 
 elif menu == "💬 건의사항 및 피드백":
     st.title("💬 아우내영농조합법인 건의사항")
