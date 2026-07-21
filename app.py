@@ -126,7 +126,7 @@ st.markdown("""
 if menu in ["🐛 살충제 검색", "🍄 살균제 검색"]:
     st.markdown("""
     <div style='background-color: #E8F8F5; padding: 22px; border-radius: 12px; border-left: 6px solid #117A65; margin-bottom: 25px;'>
-        <h3 style='margin-top:0; color: #117A65; font-size: 1.5em;'>🧪 아우내 영농조합법인 올바른 농약 혼용(섞어치기) 순서</h3>
+        <h3 style='margin-top:0; color: #117A65; font-size: 1.5em;'>🧪 올바른 농약 혼용(섞어치기) 순서</h3>
         <p style='color: #2C3E50; font-size: 1.1em;'>여러 가지 농약을 한 탱크에 섞을 때는 <b>'물에 잘 안 녹는 제형'</b>부터 순서대로 넣어야 약이 엉기거나 떡이 지지 않습니다!</p>
         <div style='background-color: white; padding: 15px; border-radius: 8px; border: 1px solid #D5F5E3; margin-top: 15px;'>
             <ol style='font-size: 1.2em; line-height: 2.0; color: #239B56; font-weight: bold; margin-bottom: 0;'>
@@ -451,7 +451,7 @@ elif menu == "🧮 희석 농도 계산기":
 elif menu == "🌐 천안시 농업지원/공지":
     st.title("🌐 천안시 농업기술센터 공지")
     st.markdown("천안시에서 진행하는 **각종 농업 보조사업 및 유용한 공지사항**을 확인하실 수 있습니다.")
-    st.markdown("매번 놓치기 쉬운 혜택들, 이제 여기서 바로 확인하세요!")
+    st.markdown("매번 놓치기 쉬운 혜택들, 여기서 바로 확인하세요!")
     st.markdown("---")
     
     st.markdown("""
