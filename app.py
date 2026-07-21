@@ -8,9 +8,6 @@ import streamlit.components.v1 as components
 
 st.set_page_config(page_title="아우내 영농조합법인 농약 검색기", page_icon="🌱", layout="wide")
 
-# ====================================================================
-# 🎨 [진짜 최종 CSS] 
-# ====================================================================
 st.markdown("""
     <style>
         .stSidebar .stRadio p {
@@ -82,16 +79,12 @@ except Exception as e:
 st.sidebar.title("🔍 아우내영농조합법인 종합 포털")
 st.sidebar.markdown("---")
 
-# 💡 여기에 '🧮 희석 농도 계산기' 메뉴가 추가되었습니다!
 menu = st.sidebar.radio(
     "메뉴를 선택하세요", 
     ["📢 법인 공지사항", "🐛 살충제 검색", "🍄 살균제 검색", "🧮 희석 농도 계산기", "💬 건의사항 및 피드백"]
 )
 st.sidebar.markdown("---")
 
-# ====================================================================
-# 💡 사이드바 자동 닫기 
-# ====================================================================
 components.html("""
     <script>
         const doc = window.parent.document;
@@ -121,7 +114,7 @@ components.html("""
         setInterval(setSidebarAutoClose, 500);
     </script>
 """, height=0, width=0)
-# ====================================================================
+
 
 st.markdown("""
     <div style='background-color: #FEF9E7; padding: 15px; border-radius: 8px; border-left: 6px solid #F4D03F; margin-bottom: 20px;'>
@@ -153,9 +146,7 @@ if menu in ["🐛 살충제 검색", "🍄 살균제 검색"]:
     """, unsafe_allow_html=True)
 
 
-# ==========================================
-# 📢 [1. 법인 공지사항 메인 화면]
-# ==========================================
+
 if menu == "📢 법인 공지사항":
     st.title("📢 아우내영농조합법인 공지사항")
     st.markdown("조합원 여러분을 위한 법인의 주요 일정 및 안내문입니다.")
@@ -185,9 +176,7 @@ if menu == "📢 법인 공지사항":
     </div>
     """, unsafe_allow_html=True)
 
-# ==========================================
-# 🐛 [2. 살충제 검색 화면] (생략 없이 전체 포함)
-# ==========================================
+
 elif menu == "🐛 살충제 검색":
     st.title("🐛 살충제 검색 시스템")
     st.markdown("**처방과 혼용 가부를 한눈에!** 검색 조건을 입력하세요.")
@@ -296,9 +285,7 @@ elif menu == "🐛 살충제 검색":
                     st.markdown(f"{base_info['작용원리']}")
                 st.markdown("---")
 
-# ==========================================
-# 🍄 [3. 살균제 검색 화면] 
-# ==========================================
+
 elif menu == "🍄 살균제 검색":
     st.title("🍄 살균제 검색 시스템")
     st.markdown("**처방과 혼용 가부를 한눈에!** 검색 조건을 입력하세요.")
@@ -348,11 +335,13 @@ elif menu == "🍄 살균제 검색":
             if ingredient_keyword_f:
                 mask_f = (
                     filtered_df_f['성분1(한글)'].astype(str).str.contains(ingredient_keyword_f, case=False, na=False, regex=False) |
+                    filtered_df_f['성분2(한글)'].astype(str).str.contains(ingredient_keyword_f, case=False, na=False, regex=False) |
                     filtered_df_f['성분1계통'].astype(str).str.contains(ingredient_keyword_f, case=False, na=False, regex=False) |
+                    filtered_df_f['성분2계통'].astype(str).str.contains(ingredient_keyword_f, case=False, na=False, regex=False) |
                     filtered_df_f['작용기작'].astype(str).str.contains(ingredient_keyword_f, case=False, na=False, regex=False)
                 )
                 filtered_df_f = filtered_df_f[mask_f]
-
+                
         if filtered_df_f.empty:
             st.warning("검색 조건에 맞는 약제가 없습니다.")
         else:
@@ -381,6 +370,9 @@ elif menu == "🍄 살균제 검색":
                     st.markdown("#### 🧪 성분 및 작용 원리")
                     st.write(f"**· 성분1:** {base_info_f.get('성분1(한글)', '')} ({base_info_f.get('성분1함량(%)', '')}%)")
                     st.write(f"   - 계통: {base_info_f.get('성분1계통', '')} [{base_info_f.get('성분1작용기작', '')}]")
+                    if base_info_f.get('성분2(한글)', '') != "":
+                        st.write(f"**· 성분2:** {base_info_f.get('성분2(한글)', '')} ({base_info_f.get('성분2함량(%)', '')}%)")
+                        st.write(f"   - 계통: {base_info_f.get('성분2계통', '')} [{base_info_f.get('성분2작용기작', '')}]")
                     st.write(f"**· 작용원리 1:** {base_info_f.get('작용원리1', '정보 없음')}")
                     st.write(f"**· 작용원리 2:** {base_info_f.get('작용원리2', '정보 없음')}")
 
@@ -394,22 +386,19 @@ elif menu == "🍄 살균제 검색":
                     st.markdown(f"**· 🚨 혼용 불가/주의:** <span style='color:red'>{base_info_f.get('혼용불가(주의)약제', '정보 없음')}</span>", unsafe_allow_html=True)
                     st.markdown("---")
 
-# ==========================================
-# 🧮 [새로운 메뉴] 희석 농도 계산기 
-# ==========================================
+
 elif menu == "🧮 희석 농도 계산기":
     st.title("🧮 농약/영양제 사용량 계산기")
     st.markdown("나에게 편한 계산 방식을 선택해서 숫자를 입력해 주세요.")
     st.markdown("---")
 
-    # 💡 깔끔하게 탭으로 나누어 화면 분할!
     tab1, tab2 = st.tabs(["💧 희석 배수 기준 계산", "📦 1말당 사용량(g/ml) 기준 계산"])
 
-    # --- 첫 번째 탭: 기존 희석배수 방식 ---
     with tab1:
         st.markdown("""
         <div style='background-color: #E8F8F5; padding: 15px; border-radius: 12px; border-left: 6px solid #117A65; margin-bottom: 20px;'>
-            <b>💡 희석배수 계산법:</b> 1말당 필요량 = 20,000ml ÷ 희석배수
+            <b>💡 희석배수 계산법:</b> 1말당 필요량 = 20,000ml ÷ 희석배수  <br>
+            <b>💡 사용량 계산법:</b> 총 몇 말용인가? = 약제 총 용량 ÷ 1말당 사용량
         </div>
         """, unsafe_allow_html=True)
         
@@ -433,11 +422,11 @@ elif menu == "🧮 희석 농도 계산기":
             with col_res3:
                 st.warning(f"**🌊 필요한 총 물의 양**\n### {int(round(total_water))} L")
 
-    # --- 두 번째 탭: 지운님이 말씀하신 1말당 사용량 방식 ---
     with tab2:
         st.markdown("""
         <div style='background-color: #FDF2E9; padding: 15px; border-radius: 12px; border-left: 6px solid #E67E22; margin-bottom: 20px;'>
-            <b>💡 1말당 사용량 계산법:</b> 총 몇 말용인가? = 약제 총 용량 ÷ 1말당 사용량
+            <b>💡 희석배수 계산법:</b> 1말당 필요량 = 20,000ml ÷ 희석배수  <br>
+            <b>💡 사용량 계산법:</b> 총 몇 말용인가? = 약제 총 용량 ÷ 1말당 사용량
         </div>
         """, unsafe_allow_html=True)
         
@@ -460,9 +449,7 @@ elif menu == "🧮 희석 농도 계산기":
             with col_res6:
                 st.warning(f"**🌊 필요한 총 물의 양**\n### {int(round(total_water_2))} L")
 
-# ==========================================
-# 💬 [4. 건의사항 및 피드백 화면]
-# ==========================================
+
 elif menu == "💬 건의사항 및 피드백":
     st.title("💬 아우내영농조합법인 건의사항")
     st.markdown("법인에 대해서 or 사이트 사용에 대해서 건의사항을 자유롭게 남겨주세요!")
