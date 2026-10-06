@@ -86,31 +86,54 @@ menu = st.sidebar.radio(
 
 components.html("""
     <script>
-        const doc = window.parent.document;
-        
+        const parentWindow = window.parent;
+        const doc = parentWindow.document;
+
+        function closeSidebarIfMobile() {
+            // 1. iframe 내부가 아닌 메인 브라우저 화면 너비(스마트폰 기준) 체크
+            const isMobile = (parentWindow.innerWidth <= 768) || 
+                             (parentWindow.matchMedia && parentWindow.matchMedia('(max-width: 768px)').matches);
+
+            if (isMobile) {
+                const sidebar = doc.querySelector('[data-testid="stSidebar"]');
+                if (sidebar) {
+                    // 2. 다양한 Streamlit 버전의 닫기(접기) 버튼 선택자 대응
+                    const closeBtn = doc.querySelector('[data-testid="stSidebarCollapseButton"] button') ||
+                                     sidebar.querySelector('button[aria-label*="Close" i]') ||
+                                     sidebar.querySelector('button[aria-label*="닫기" i]') ||
+                                     sidebar.querySelector('[data-testid="stSidebarCollapseButton"]') ||
+                                     sidebar.querySelector('button');
+
+                    if (closeBtn) {
+                        // 3. 라디오 선택 값이 서버로 안전하게 전송된 후 닫히도록 200ms 지연 실행
+                        setTimeout(() => {
+                            closeBtn.click();
+                        }, 200);
+                    }
+                }
+            }
+        }
+
         function setSidebarAutoClose() {
+            // 모바일에서는 input 직접 클릭 대신 label 터치 및 change 이벤트가 발생하므로 모두 감지
             const radios = doc.querySelectorAll('input[type="radio"]');
-            
             radios.forEach(radio => {
-                if (!radio.hasAttribute('data-click-bound')) {
-                    radio.setAttribute('data-click-bound', 'true');
-                    
-                    radio.addEventListener('click', () => {
-                        if (window.innerWidth <= 768) {
-                            const sidebar = doc.querySelector('[data-testid="stSidebar"]');
-                            if (sidebar) {
-                                const closeBtn = sidebar.querySelector('button');
-                                if (closeBtn) {
-                                    setTimeout(() => closeBtn.click(), 150);
-                                }
-                            }
-                        }
-                    });
+                if (!radio.hasAttribute('data-autoclose-bound')) {
+                    radio.setAttribute('data-autoclose-bound', 'true');
+                    radio.addEventListener('change', closeSidebarIfMobile);
+                }
+            });
+
+            const radioLabels = doc.querySelectorAll('[data-testid="stRadio"] label');
+            radioLabels.forEach(label => {
+                if (!label.hasAttribute('data-autoclose-bound')) {
+                    label.setAttribute('data-autoclose-bound', 'true');
+                    label.addEventListener('click', closeSidebarIfMobile);
                 }
             });
         }
-        
-        setInterval(setSidebarAutoClose, 500);
+
+        setInterval(setSidebarAutoClose, 400);
     </script>
 """, height=0, width=0)
 
